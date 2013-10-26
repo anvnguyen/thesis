@@ -14,7 +14,11 @@ $this->menu=array(
 
 <h1>Websites</h1>
 
-<?php $this->widget('zii.widgets.CListView', array(
+<?php 
+
+$this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,
 	'itemView'=>'_view',
-)); ?>
+)); 
+
+?>

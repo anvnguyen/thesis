@@ -32,12 +32,12 @@ class CategoryController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
+				'actions'=>array('create','update', 'test'),
+				'users'=>array('*'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
+				'users'=>array('*'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -69,12 +69,13 @@ class CategoryController extends Controller
 
 		if(isset($_POST['Category']))
 		{
-			$model->attributes=$_POST['Category'];
+			$model->Name=$_POST['Category'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->ID));
+				echo $model->Name;
+			die();
 		}
 
-		$this->render('create',array(
+		$this->renderPartial('create',array(
 			'model'=>$model,
 		));
 	}

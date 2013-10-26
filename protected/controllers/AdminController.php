@@ -11,7 +11,25 @@ class AdminController extends Controller
 	
 	public function actionIndex()
 	{
-		$this->redirect(array('item/admin'));
+		// $this->redirect(array('item/admin'));
+		$this->render('index');
+	}
+
+	public function actionGetPartialView()
+	{
+		if(isset($_POST['page']))
+		{
+			switch ($_POST['page']) {
+				case 'website':
+					$this->redirect(array('website/admin'));
+					break;
+				
+				default:
+					# code...
+					break;
+			}
+		}
+
 	}
 
 }

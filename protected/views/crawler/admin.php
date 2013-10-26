@@ -8,10 +8,10 @@
     )); ?>
      
     <?php 
-        echo CHtml::textArea('rawHtml', $RawHTML, array('class'=>'span5', 'rows'=>10)); 
+        echo CHtml::textArea('rawHtml', $RawHTML, array('class'=>'span4', 'rows'=>10)); 
     ?>
     <?php 
-        echo CHtml::textArea('tidyHtml', $TidyHTML, array('class'=>'span6', 'rows'=>10)); 
+        echo CHtml::textArea('tidyHtml', $TidyHTML, array('class'=>'span5', 'rows'=>10)); 
     ?>
 
     </div>
@@ -30,6 +30,25 @@
         ),
     	)
     ); 
+    ?>
+
+    <?php echo CHtml::ajaxSubmitButton(
+        Yii::t('Extract','Extract'),
+        Yii::app()->createUrl('crawler/extractCategory'),
+            array(
+                // 'update'=>'#content',
+                'data' => array(
+                    'url' => 'js:function()
+                    {
+                        return document.getElementById("fetchURL").value;
+                    }'
+                    ),
+                ),
+            array(
+                'id'=>'extract', 
+                'class' => 'btn btn-primary',
+                )
+            ); 
     ?>
 
     <!-- Modal -->
@@ -70,7 +89,7 @@
                     ),
                 array('id'=>'closeJobDialog', 
                       'class' => 'btn btn-primary')); 
-        ?>    
+        ?>             
     </div>
 
 

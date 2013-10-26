@@ -1,18 +1,9 @@
-<?php
-/* @var $this WebsiteController */
-/* @var $model Website */
-
-$this->breadcrumbs=array(
-	'Websites'=>array('index'),
-	'Create',
-);
-
-$this->menu=array(
-	array('label'=>'List Website', 'url'=>array('index')),
-	array('label'=>'Manage Website', 'url'=>array('admin')),
-);
+<?php 
+$this->renderPartial('_form', 
+	array(
+		'model'=>$model, 
+		'xpath' => $xpath, 
+		'categoryURL' => $categoryURL, 
+	)
+	); 
 ?>
-
-<h1>Create Website</h1>
-
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>

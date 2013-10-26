@@ -28,7 +28,6 @@ class Location extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Location', 'required'),
 			array('Location', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -55,7 +54,7 @@ class Location extends CActiveRecord
 	{
 		return array(
 			'ID' => 'ID',
-			'Location' => 'Location',
+			'Location' => '',
 		);
 	}
 
@@ -94,5 +93,18 @@ class Location extends CActiveRecord
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
+	}
+
+	public static function getLocations()
+	{
+		$model = new Location;
+		$locations = array();
+		$records = $model->findAllBySql('select * from location');
+
+		foreach ($records as $record) {
+			array_push($locations, $record->Location);
+		}
+
+		return $locations;
 	}
 }

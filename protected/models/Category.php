@@ -25,7 +25,7 @@ class Category extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Name', 'required'),
+// 			array('Name', 'required'),
 			array('Name', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -51,7 +51,7 @@ class Category extends CActiveRecord
 	{
 		return array(
 			'ID' => 'ID',
-			'Name' => 'Name',
+			'Name' => 'Category',
 		);
 	}
 
@@ -90,5 +90,16 @@ class Category extends CActiveRecord
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
+	}
+
+	public static function getCategoryNames()
+	{
+		$categories = Category::model()->findAllBySql("SELECT * FROM Category");
+		$list = array();
+		foreach ($categories as $category) {
+			array_push($list, $category->Name);
+		}
+
+		return $list;
 	}
 }

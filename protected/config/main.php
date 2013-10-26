@@ -18,7 +18,12 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+		'bootstrap.helpers.TbHtml',
 	),
+
+	'aliases' => array(
+        'bootstrap' => realpath(__DIR__ . '/../extensions/bootstrap'), // change this if necessary
+    ),
 
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
@@ -39,6 +44,10 @@ return array(
 	'components'=>array(
 		'crawler' => array(
 			'class' => 'Crawler',
+		),
+		
+		'extractor' => array(
+			'class'=>'Extractor',
 		),
 
 		'bootstrap'=>array(

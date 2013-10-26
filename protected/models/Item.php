@@ -71,16 +71,16 @@ class Item extends CActiveRecord
 	{
 		return array(
 			'ID' => 'ID',
-			'Name' => 'Sản phẩm',
-			'Price' => 'Giá',
-			'Category' => 'Loại hàng',
-			'ImageURL' => 'Ảnh minh họa',
-			'Update' => 'Cập nhật',
-			'Purchases' => 'Đã mua',
+			'Name' => 'Product',
+			'Price' => 'Price',
+			'Category' => 'Category',
+			'ImageURL' => 'Image',
+			'Update' => 'Update',
+			'Purchases' => 'Purchases',
 			'Website' => 'Website',
 			'URL' => 'URL',
-			'Location' => 'Khu vực',
-			'Address' => 'Địa chỉ',
+			'Location' => 'Location',
+			'Address' => 'Address',
 		);
 	}
 

@@ -7,6 +7,11 @@
  * @property integer $ID
  * @property string $Name
  * @property string $URL
+ * @property string $RawHTML
+ * @property string $TidyHTML
+ *
+ * The followings are the available model relations:
+ * @property Item[] $items
  */
 class Website extends CActiveRecord
 {
@@ -26,11 +31,11 @@ class Website extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Name, URL', 'required'),
+			// array('Name, URL, RawHTML, TidyHTML', 'required'),
 			array('Name, URL', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('ID, Name, URL', 'safe', 'on'=>'search'),
+			array('ID, Name, URL, RawHTML, TidyHTML', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -42,6 +47,7 @@ class Website extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'items' => array(self::HAS_MANY, 'Item', 'Website'),
 		);
 	}
 
@@ -53,7 +59,10 @@ class Website extends CActiveRecord
 		return array(
 			'ID' => 'ID',
 			'Name' => 'Name',
-			'URL' => 'Url',
+			'URL' => 'URL',
+			'LocationID' => 'Location',
+			'RawHTML' => 'Raw HTML',
+			'TidyHTML' => 'Repaired HTML',
 		);
 	}
 
@@ -78,6 +87,8 @@ class Website extends CActiveRecord
 		$criteria->compare('ID',$this->ID);
 		$criteria->compare('Name',$this->Name,true);
 		$criteria->compare('URL',$this->URL,true);
+		$criteria->compare('RawHTML',$this->RawHTML,true);
+		$criteria->compare('TidyHTML',$this->TidyHTML,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

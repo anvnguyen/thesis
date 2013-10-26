@@ -21,13 +21,9 @@
         array(
             'class'=>'bootstrap.widgets.TbMenu',
             'items'=>array(
-                array('label'=>'Home', 'url'=>array('/site/index')),
-				array('label'=>'Dashboard', 'url'=>array('/admin/index')),
+                array('label'=>'Home', 'url'=>array('/admin/index')),
+				array('label'=>'Website', 'url'=>array('website/admin')),
 				array('label'=>'Crawler', 'url'=>array('/crawler/admin')),
-                // array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
-                // array('label'=>'Contact', 'url'=>array('/site/contact')),
-                // array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-                // array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
             ),
         ),
     ),
@@ -41,7 +37,7 @@
 		)); ?><!-- breadcrumbs -->
 	<?php endif?>
 
-	<?php echo $content; ?>
+	<?php echo $content; ?> 
 
 	<div class="clear"></div>
 
@@ -52,3 +48,4 @@
 
 </body>
 </html>
+ 
