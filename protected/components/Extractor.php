@@ -190,8 +190,10 @@ class Extractor
 				//add to array
 				if($option == "one")
 					return $item;
-				else 
+				else{
+					//TODO: check if this item exists or not					
 					$item->save(false);
+				}					
 			}
 		}
 		
@@ -205,7 +207,7 @@ class Extractor
 	
 		$array = array();
 		foreach ($results as $query) {
-			$url = $query->attributes->item(0)->nodeValue;
+			$url = @$query->attributes->item(0)->nodeValue;
 			if($this->checkLink($url) && !in_array($url, $array)){				
 				array_push($array, $url);
 			}

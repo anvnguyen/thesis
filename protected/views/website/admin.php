@@ -14,7 +14,7 @@
 	<?php $this->widget('bootstrap.widgets.TbGridView', array(
 		'id'=>'website-grid',
 		'type'=>'striped condensed',
-		'template'=>"{items}",
+		'template'=>"{summary}{items}{pager}",
 		'dataProvider'=>$model->search(),
 		'filter'=>$model,
 		'columns'=>array(

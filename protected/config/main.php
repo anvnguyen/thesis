@@ -54,6 +54,14 @@ return array(
             'class'=>'bootstrap.components.Bootstrap',
         ),
 
+        'behaviour' => array(
+        	'class' => 'BehaviourService',
+    	),
+
+    	'recommender' => array(
+        	'class' => 'Recommender',
+    	),
+
 		'constant' => array(
 			'class' => 'Constant',
 			),

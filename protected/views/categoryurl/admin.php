@@ -60,7 +60,7 @@ $this->widget('bootstrap.widgets.TbGridView', array(
         'bootstrap.widgets.TbButton', array(
         'label'=>'Insert Xpath',
         'icon' => 'icon-plus-sign',
-        'url' => Yii::app()->createUrl('xpath/admin'),
+        'url' => Yii::app()->createUrl('xpath/admin2'),
         'type'=>'info', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
         'size'=>'small', // null, 'large', 'small' or 'mini'
     ));  

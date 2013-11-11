@@ -17,11 +17,14 @@ class AdminController extends Controller
 
 	public function actionGetPartialView()
 	{
-		if(isset($_POST['page']))
-		{
+		if(isset($_POST['page'])){
 			switch ($_POST['page']) {
 				case 'website':
 					$this->redirect(array('website/admin'));
+					break;
+
+				case 'demo':
+					$this->redirect(array());
 					break;
 				
 				default:

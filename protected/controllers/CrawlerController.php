@@ -77,4 +77,9 @@ class CrawlerController extends Controller
 		$this->render('admin', array('url' => $url, 'TidyHTML' => $TidyHTML, 'RawHTML' => $RawHTML));
 	}
 
+	public function actionTest()
+	{
+		var_dump(Yii::app()->crawler->getContentURL("http://www.nhommua.com/tp-ho-chi-minh/cafe-am-thuc/"));
+	}
+
 }
