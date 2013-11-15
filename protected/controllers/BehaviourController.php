@@ -39,16 +39,10 @@ class BehaviourController extends Controller
 				'actions'=>array('admin','delete'),
 				'users'=>array('admin'),
 			),
-			// array('deny',  // deny all users
-			// 	'users'=>array('*'),
-			// ),
+			array('deny',  // deny all users
+				'users'=>array('*'),
+			),
 		);
-	}
-
-	public function actionTest()
-	{
-		// echo Yii::app()->recommender->getTopNBestPrice(3, 10);
-		echo Yii::app()->recommender->getTopNMostInterest(3);
 	}
 
 	/**
@@ -128,9 +122,10 @@ class BehaviourController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Behaviour');
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			'numSearchs'=> Behaviour::model()->countByAttributes(array('action' => 'search')),
+			'numViewDetails'=>Behaviour::model()->countByAttributes(array('action' => 'viewDetail')),
+			'numBuys'=> Behaviour::model()->countByAttributes(array('action' => 'buy')),
 		));
 	}
 

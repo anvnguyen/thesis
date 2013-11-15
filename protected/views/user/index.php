@@ -1,20 +1,32 @@
 <?php
-/* @var $this UserController */
-/* @var $dataProvider CActiveDataProvider */
-
-$this->breadcrumbs=array(
-	'Users',
-);
-
-$this->menu=array(
-	array('label'=>'Create User', 'url'=>array('create')),
-	array('label'=>'Manage User', 'url'=>array('admin')),
-);
+$this->pageTitle=Yii::app()->name;
+$baseUrl = Yii::app()->baseUrl; 
 ?>
 
-<h1>Users</h1>
+<div class="page-header">
+  <h1>Users <small>Account management</small></h1>
+</div>
 
-<?php $this->widget('zii.widgets.CListView', array(
-	'dataProvider'=>$dataProvider,
-	'itemView'=>'_view',
-)); ?>
+<div class="row-fluid">
+  <div class="span8">
+  	<?php
+		$this->beginWidget('zii.widgets.CPortlet', array(
+			'title'=>"User account",
+		));
+		
+	?>
+  	<?php $this->widget('zii.widgets.grid.CGridView', array(
+			/*'type'=>'striped bordered condensed',*/
+			'itemsCssClass'=>'table table-hover',
+			'dataProvider'=>$model->search(),
+			'template'=>"{items}",
+			'columns'=>array(
+				array('name'=>'id', 'header'=>'#'),
+				array('name'=>'username', 'header'=>'User name'),
+				array('name'=>'password', 'header'=>'Password'),
+				array('name'=>'email', 'header'=>'Email', 'type'=>'raw'),
+				
+			),
+		)); ?>
+<?php $this->endWidget();?>
+  </div>
