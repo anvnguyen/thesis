@@ -45,6 +45,12 @@ class FeedbackController extends Controller
 		);
 	}
 
+	public function actionSendRecommendEmail(){
+		// print_r('<pre>');
+		Yii::app()->sendemail->sendRecommenderMail();
+		// print_r('</pre>');
+	}
+
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -65,8 +71,7 @@ class FeedbackController extends Controller
 			$feedback = $this->loadModel($_POST['Feedback']['ID']);
 			$feedback->attributes = $_POST['Feedback'];
 			if($feedback->save()){
-				$mesageBody = 
-					Yii::app()->sendemail->messageResponseFeedback($feedback->name, $feedback->response, $feedback->message);
+				$mesageBody = Yii::app()->sendemail->messageResponseFeedback($feedback->name, $feedback->response, $feedback->message);
 				Yii::app()->sendemail->send($mesageBody, Yii::app()->sendemail->emailTitleForResponeFeedback(), $feedback->email);
 				echo 'success';
 			}else{

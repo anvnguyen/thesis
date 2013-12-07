@@ -8,6 +8,20 @@ class SiteController extends Controller
 	 */
 	public $layout='//layouts/column2';
 	
+	public function actionTest()
+	{
+		Yii::import('ext.yii-mail.YiiMailMessage');
+        $message            = new YiiMailMessage;
+          //this points to the file test.php inside the view path
+       // $message->view = "test";
+       $message->subject    = 'My TestSubject';
+       $message->setBody('<h1>this is test mail</h1>', 'text/html');                
+       $message->addTo('nguyen.tran@softfoundry.com');
+       $message->from = 'hotdealbk@gmail.com';   
+       $message->attach(Swift_Attachment::fromPath('test.pdf'));
+       Yii::app()->mail->send($message);  
+	}
+
 	/**
 	 * Declares class-based actions.
 	 */

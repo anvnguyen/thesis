@@ -32,7 +32,7 @@ class Constant
 		var_dump($message);
 		print_r('</pre>');
 		die();
-	}
+	}	
 }
 
 ?>

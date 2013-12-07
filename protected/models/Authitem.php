@@ -1,22 +1,29 @@
 <?php
 
 /**
- * This is the model class for table "user".
+ * This is the model class for table "authitem".
  *
- * The followings are the available columns in table 'user':
- * @property integer $ID
- * @property string $username
- * @property string $password
- * @property string $email
+ * The followings are the available columns in table 'authitem':
+ * @property string $name
+ * @property integer $type
+ * @property string $description
+ * @property string $bizrule
+ * @property string $data
+ *
+ * The followings are the available model relations:
+ * @property Authassignment[] $authassignments
+ * @property Authitemchild[] $authitemchildren
+ * @property Authitemchild[] $authitemchildren1
+ * @property User[] $users
  */
-class User extends CActiveRecord
+class Authitem extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'user';
+		return 'authitem';
 	}
 
 	/**
@@ -27,12 +34,13 @@ class User extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password, email', 'required'),
-			array('username, password', 'length', 'max'=>30),
-			array('email', 'length', 'max'=>100),
+			array('name, type', 'required'),
+			array('type', 'numerical', 'integerOnly'=>true),
+			array('name', 'length', 'max'=>64),
+			array('description, bizrule, data', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('ID, username, password, email', 'safe', 'on'=>'search'),
+			array('name, type, description, bizrule, data', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -44,6 +52,10 @@ class User extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'authassignments' => array(self::HAS_MANY, 'Authassignment', 'itemname'),
+			'authitemchildren' => array(self::HAS_MANY, 'Authitemchild', 'parent'),
+			'authitemchildren1' => array(self::HAS_MANY, 'Authitemchild', 'child'),
+			'users' => array(self::HAS_MANY, 'User', 'role'),
 		);
 	}
 
@@ -53,10 +65,11 @@ class User extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'ID' => 'ID',
-			'username' => 'Username',
-			'password' => 'Password',
-			'email' => 'Email',
+			'name' => 'Name',
+			'type' => 'Type',
+			'description' => 'Description',
+			'bizrule' => 'Bizrule',
+			'data' => 'Data',
 		);
 	}
 
@@ -78,37 +91,36 @@ class User extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('ID',$this->ID);
-		$criteria->compare('username',$this->username,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('email',$this->email,true);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('type',$this->type);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('bizrule',$this->bizrule,true);
+		$criteria->compare('data',$this->data,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
 
-	public function encrypt($password)
-	{
-		return md5($password);
-	}
-
-	protected function beforeSave()
-	{
-		parent::beforeSave();
-		$this->password = $this->encrypt($this->password);
-		return true;
-	}
-
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return User the static model class
+	 * @return Authitem the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
 
+	public static function getRoles()
+	{
+		$roles = array();
+		$authItems = Authitem::model()->findAll();
+		foreach ($authItems as $value) {
+			array_push($roles, $value->name);
+		}
+
+		return $roles;
+	}
 }

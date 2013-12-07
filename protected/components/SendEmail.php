@@ -7,6 +7,38 @@ class SendEmail
 		
 	}
 
+	public function sendRecommenderMail(){
+		$numOfBestPrice = intval(Config::model()->findByAttributes(array('Name' => 'numOfBestPriceViaMail'))->Value);		
+		$topPriceIDs = Yii::app()->recommender->getTopNBestPrice($numOfBestPrice);
+
+		$numOfBestInterested = intval(Config::model()->findByAttributes(array('Name' => 'numOfBestInterestedViaMail'))->Value);
+		$topInterestIDs = Yii::app()->recommender->getTopNMostInterest($numOfBestInterested);
+		
+		$users = User::model()->findAll();
+		foreach ($users as $user) {			
+			$numOfUseUser = intval(Config::model()->findByAttributes(array('Name' => 'numOfUserUserViaMail'))->Value);			
+			$topUserUserIDs = Yii::app()->recommender->getTopNUserUser($numOfUseUser, $user->ID);	
+
+			$messageBody = $this->generateMessageBodyForRecommendMail($topPriceIDs, $topInterestIDs, $topUserUserIDs);
+			var_dump($messageBody);
+			return;
+			$this->send($messageBody, $this->emailTitleForRecommender(), $user->email);
+		}
+	}
+
+	// '. Yii::app()->controller->renderFile(Yii::app()->basePath.'\views\feedback\_recommend.php', array()) .'
+
+	public function generateMessageBodyForRecommendMail($topPriceIDs, $topInterestIDs, $topUserUserIDs)
+	{
+		ob_start();
+		Yii::app()->controller->renderFile(Yii::app()->basePath.'\views\feedback\_recommend.php', 
+			array('item' => new Item, 'topPriceIDs' => $topPriceIDs, 'topInterestIDs' => $topInterestIDs, 'topUserUserIDs' => $topUserUserIDs));
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		return $html;
+	}
+
 	public function send($messageBody, $subject, $toEmail) {
 		Yii::import('ext.yii-mail.YiiMailMessage');
 		$message = new YiiMailMessage;
@@ -19,7 +51,7 @@ class SendEmail
 		Yii::app()->mail->send($message);
 	}
 
-	public function messageResponseFeedback($receiver, $message){
+	public function messageResponseFeedback($receiver, $message, $feedback){
 		return '
 		<div style="width:650px;margin:0 auto;padding-top:1px;background-color:#3683b4">
 			<div style="margin-left:8px;width:642px;background-color:#fff">
@@ -35,7 +67,9 @@ class SendEmail
 					<p style="margin:15px 0">Thân,
 					<br> '. Yii::app()->name .'</p>
 					<p></p>
-					<p></p>
+					<p>-------------------------------------</p>
+					<p>Bạn đã phản hồi cho website Hot deal Bách Khoa</p>
+					<p style="margin:15px 0">"'. $feedback .'"</p>
 				</div>
 				<div style="margin:0 auto;padding:50px 0 5px 0">
 				<div style="margin:0 auto;margin-bottom:10px;width:440px;min-height:1px;border-top:1px solid #f5f5f5;border-bottom:1px solid #f5f5f5"></div>
@@ -49,6 +83,11 @@ class SendEmail
 	public function emailTitleForResponeFeedback()
 	{
 		return "Trả lời phản hồi từ " . Yii::app()->name ;
+	}
+
+	public function emailTitleForRecommender()
+	{
+		return Yii::app()->name . ": Các sản phẩm giảm giá đang hot nhất hiện nay";
 	}
 }
 

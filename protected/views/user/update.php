@@ -1,21 +1,17 @@
-<?php
-/* @var $this UserController */
-/* @var $model User */
+<legend>Update User <?php echo $model->ID; ?></legend>
 
-$this->breadcrumbs=array(
-	'Users'=>array('index'),
-	$model->ID=>array('view','id'=>$model->ID),
-	'Update',
-);
-
-$this->menu=array(
-	array('label'=>'List User', 'url'=>array('index')),
-	array('label'=>'Create User', 'url'=>array('create')),
-	array('label'=>'View User', 'url'=>array('view', 'id'=>$model->ID)),
-	array('label'=>'Manage User', 'url'=>array('admin')),
-);
-?>
-
-<h1>Update User <?php echo $model->ID; ?></h1>
-
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php /** @var BootActiveForm $form */
+$form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+    'id'=>'verticalForm',
+    'htmlOptions'=>array('class'=>'well'),
+)); ?>
+ 
+<?php echo $form->textFieldRow($model, 'username', array('class'=>'span3')); ?>
+<?php echo $form->textFieldRow($model, 'email', array('class'=>'span3')); ?>
+<?php echo $form->dropDownListRow($model, 'role', Authitem::model()->getRoles()); ?>
+<?php echo $form->passwordFieldRow($model, 'password', array('class'=>'span3')); ?>
+<?php echo $form->checkboxRow($model, 'subscribe'); ?>
+<?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'submit', 'label'=>'Update')); ?>
+<?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'submit', 'label'=>'Change password')); ?>
+ 
+<?php $this->endWidget(); ?>

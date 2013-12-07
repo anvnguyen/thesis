@@ -1,22 +1,21 @@
 <?php
 
 /**
- * This is the model class for table "user".
+ * This is the model class for table "config".
  *
- * The followings are the available columns in table 'user':
+ * The followings are the available columns in table 'config':
  * @property integer $ID
- * @property string $username
- * @property string $password
- * @property string $email
+ * @property string $Name
+ * @property string $Value
  */
-class User extends CActiveRecord
+class Config extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'user';
+		return 'config';
 	}
 
 	/**
@@ -27,12 +26,11 @@ class User extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password, email', 'required'),
-			array('username, password', 'length', 'max'=>30),
-			array('email', 'length', 'max'=>100),
+			array('Name, Value', 'required'),
+			array('Name, Value', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('ID, username, password, email', 'safe', 'on'=>'search'),
+			array('ID, Name, Value', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,9 +52,8 @@ class User extends CActiveRecord
 	{
 		return array(
 			'ID' => 'ID',
-			'username' => 'Username',
-			'password' => 'Password',
-			'email' => 'Email',
+			'Name' => 'Name',
+			'Value' => 'Value',
 		);
 	}
 
@@ -79,36 +76,22 @@ class User extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('ID',$this->ID);
-		$criteria->compare('username',$this->username,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('email',$this->email,true);
+		$criteria->compare('Name',$this->Name,true);
+		$criteria->compare('Value',$this->Value,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
 
-	public function encrypt($password)
-	{
-		return md5($password);
-	}
-
-	protected function beforeSave()
-	{
-		parent::beforeSave();
-		$this->password = $this->encrypt($this->password);
-		return true;
-	}
-
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return User the static model class
+	 * @return Config the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-
 }

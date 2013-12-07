@@ -1,22 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "user".
+ * This is the model class for table "itemitem".
  *
- * The followings are the available columns in table 'user':
+ * The followings are the available columns in table 'itemitem':
  * @property integer $ID
- * @property string $username
- * @property string $password
- * @property string $email
+ * @property integer $userID
+ * @property integer $itemID
+ * @property double $ratings
+ *
+ * The followings are the available model relations:
+ * @property User $user
+ * @property Item $item
  */
-class User extends CActiveRecord
+class Itemitem extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'user';
+		return 'itemitem';
 	}
 
 	/**
@@ -27,12 +31,12 @@ class User extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password, email', 'required'),
-			array('username, password', 'length', 'max'=>30),
-			array('email', 'length', 'max'=>100),
+			array('userID, itemID, ratings', 'required'),
+			array('userID, itemID', 'numerical', 'integerOnly'=>true),
+			array('ratings', 'numerical'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('ID, username, password, email', 'safe', 'on'=>'search'),
+			array('ID, userID, itemID, ratings', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -44,6 +48,8 @@ class User extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'user' => array(self::BELONGS_TO, 'User', 'userID'),
+			'item' => array(self::BELONGS_TO, 'Item', 'itemID'),
 		);
 	}
 
@@ -54,9 +60,9 @@ class User extends CActiveRecord
 	{
 		return array(
 			'ID' => 'ID',
-			'username' => 'Username',
-			'password' => 'Password',
-			'email' => 'Email',
+			'userID' => 'User',
+			'itemID' => 'Item',
+			'ratings' => 'Ratings',
 		);
 	}
 
@@ -79,36 +85,23 @@ class User extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('ID',$this->ID);
-		$criteria->compare('username',$this->username,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('email',$this->email,true);
+		$criteria->compare('userID',$this->userID);
+		$criteria->compare('itemID',$this->itemID);
+		$criteria->compare('ratings',$this->ratings);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
 
-	public function encrypt($password)
-	{
-		return md5($password);
-	}
-
-	protected function beforeSave()
-	{
-		parent::beforeSave();
-		$this->password = $this->encrypt($this->password);
-		return true;
-	}
-
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return User the static model class
+	 * @return Itemitem the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
-
 }

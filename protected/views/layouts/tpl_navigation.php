@@ -18,7 +18,18 @@
                     'encodeLabel'=>false,
                     'items'=>array(
                         array('label'=>'Dashboard', 'url'=>array('/site/index')),
-                        array('label'=>'Users', 'url'=>array('/user/index')),
+                        array(
+                            'label'=>'Users and Roles <span class="caret"></span>', 
+                            'url'=>array('#'),
+                            'itemOptions'=>array('class'=>'dropdown','tabindex'=>"-1"),
+                            'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
+                            'items'=>array(
+                                array('label'=>'Users', 
+                                    'url'=>array('/user/index')),
+                                array('label'=>'Roles', 
+                                    'url'=>array('/role/index')),
+                            )
+                        ),
                         array('label'=>'Behaviours', 'url'=>array('/behaviour/index')),
                         array('label'=>'Items', 'url'=>array('/item/admin')),
                         array('label'=>'Websites', 'url'=>array('/website/admin')),
@@ -27,14 +38,19 @@
 						array('label'=>'Interface', 'url'=>array('/site/page', 'view'=>'interface')),
                         array('label'=>'Typography', 'url'=>array('/site/page', 'view'=>'typography')),
                         /*array('label'=>'Gii generated', 'url'=>array('customer/index')),*/
-                        array('label'=>'My Account <span class="caret"></span>', 'url'=>'#','itemOptions'=>array('class'=>'dropdown','tabindex'=>"-1"),'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
-                        'items'=>array(
-                            array('label'=>'My Messages <span class="badge badge-warning pull-right">26</span>', 'url'=>'#'),
-							array('label'=>'My Tasks <span class="badge badge-important pull-right">112</span>', 'url'=>'#'),
-							array('label'=>'My Invoices <span class="badge badge-info pull-right">12</span>', 'url'=>'#'),
-							array('label'=>'Separated link', 'url'=>'#'),
-							array('label'=>'One more separated link', 'url'=>'#'),
-                        )),
+                        array(
+                            'label'=>'My Account <span class="caret"></span>', 
+                            'url'=>'#',
+                            'itemOptions'=>array('class'=>'dropdown','tabindex'=>"-1"),
+                            'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
+                            'items'=>array(
+                                array('label'=>'My Messages <span class="badge badge-warning pull-right">26</span>', 'url'=>'#'),
+    							array('label'=>'My Tasks <span class="badge badge-important pull-right">112</span>', 'url'=>'#'),
+    							array('label'=>'My Invoices <span class="badge badge-info pull-right">12</span>', 'url'=>'#'),
+    							array('label'=>'Separated link', 'url'=>'#'),
+    							array('label'=>'One more separated link', 'url'=>'#'),
+                            )
+                        ),
                         array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
                         array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest),
                     ),
