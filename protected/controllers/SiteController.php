@@ -10,6 +10,8 @@ class SiteController extends Controller
 	
 	public function actionTest()
 	{
+		Yii::app()->recommender->main();
+		die();
 		Yii::import('ext.yii-mail.YiiMailMessage');
         $message            = new YiiMailMessage;
           //this points to the file test.php inside the view path

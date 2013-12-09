@@ -13,7 +13,7 @@ class Recommender
 	
 	public $listItemCategory;
 	
-	public $listUsersItems;
+	// public $listUsersItems;
 	
 	/* List of user means base on $listUsers and their behaviours */
 	public $userMean;
@@ -62,15 +62,15 @@ class Recommender
 	/*This function is to get top n items that users most interest  in
 	@return array of model
 	*/
-	public function getTopNMostInterest($nItems){
-		$model = Mostinterest::model()->findAll();
-		$list = array();
-		foreach ($model as $row) {
-			$list = $list + array( $row->itemID => $row->rating, );
-		}
-		asort($list);		
-		return array_keys(array_slice($list, 0, $nItems, true));
-	}
+	// public function getTopNMostInterest($nItems){
+	// 	$model = Mostinterest::model()->findAll();
+	// 	$list = array();
+	// 	foreach ($model as $row) {
+	// 		$list = $list + array( $row->itemID => $row->rating, );
+	// 	}
+	// 	asort($list);		
+	// 	return array_keys(array_slice($list, 0, $nItems, true));
+	// }
 
 
 	public function getTopNUserUser($nItems, $userID){
@@ -94,6 +94,10 @@ class Recommender
 		$this->itemUsers = array();
 		$this->userItems = array();
 
+		foreach (Actions::model()->findAll() as $model) {
+			$this->actions += array($model->action => $model->score, );
+		}
+
 		foreach ($this->behaviours as $behaviour) {
 			if(in_array($behaviour->itemID, $this->listItems) == false){
 				array_push($this->listItems, $behaviour->itemID);
@@ -102,32 +106,32 @@ class Recommender
 			if(in_array($behaviour->userID, $this->listUsers) == false){
 				array_push($this->listUsers, $behaviour->userID);
 			}
-			
-			if(in_array($behaviour->itemID, array_values($this->itemUsers))){
-				if(in_array($behaviour->userID, array_values($this->itemUsers[])))
-			}else{
 
+			//calculate array for item - item algorithm	
+			$exist = false;
+			foreach ($this->userItems as $userItem) {
+				if($userID == $userItem->userID && $itemID == $userItem->itemID){
+					$userItem->sum += =$behaviour->times * $this->actions[$behaviour->action];
+					$userItem->count += 1;
+					$exist = true;
+				}				
 			}
 
-			if(in_array($behaviour->userID, array_values($this->userItems))){
+			if($exist == false){
 
-			}else{
-
-			}
-		}		
-		
-		foreach (Actions::model()->findAll() as $model) {
-			$this->actions += array($model->action => $model->score, );
+			}			
 		}
+
 		
 		$this->getItemCategory();
-		$this->calculateUserMean();
+		$this->calculateUserMean();		
 		$this->calculateUserStandardDeviation();
 		$this->calculateListOfSimilarityUsers();
 		$this->createUserUserCF();
+		$this->createItemItemCF();
 		
 		//get most interesting
-		$this->getTopNMostInterest();
+		$this->setTopNMostInterest();
 	}
 	
 	private function getItemCategory(){
@@ -142,7 +146,7 @@ class Recommender
 	/*@Description: get top n items that users most interest  in
 	* @return: array of item IDs
 	*/
-	private function getTopNMostInterest(){				
+	private function setTopNMostInterest(){				
 		$items = array();
 		foreach ($this->behaviours as $behaviour) {
 			if(in_array($behaviour->itemID, $items) == false)
@@ -180,7 +184,6 @@ class Recommender
 	 * @return an associative array of userID => its behaviour mean
 	 *  */
 	private function calculateUserMean(){
-		$this->userMean = array();		
 		foreach ($this->listUsers as $userID) {
 			$sum = 0;
 			$count = 0;
@@ -384,10 +387,7 @@ class Recommender
 		foreach ($variable as $key => $value) {
 			
 		}		
-	}
-
-
-	
+	}	
 }
 
 ?>
