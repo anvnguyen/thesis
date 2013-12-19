@@ -1,29 +1,9 @@
 <legend>Category manager</legend>  
-<div style="text-align:left">
-<?php 
-    $this->widget(
-        'bootstrap.widgets.TbButton', array(
-        'label'=>'New category URL',
-        'icon' => 'icon-plus-sign',
-         'htmlOptions'=>array(
-            'onclick'=>'newCategory()',
-         	'class' => 'subtitle',
-         	'data-toggle' => 'collapse',
-         	'data-target' => '#general-info',
-        ),
-        'type'=>'info', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
-        'size'=>'small', // null, 'large', 'small' or 'mini'
-    )); 
-?>
-</div>
-<br>
-<div id="general-info" class="collapse in collapse-group">
+
 <?php 
 	$this->renderPartial('_form', array('model' => $model, ));
 ?>
-</div>
 
-<!-- Use TbGridView to show category -->
 <?php 
 $this->widget('bootstrap.widgets.TbGridView', array(
     'id'=>'category_grid',
@@ -33,12 +13,22 @@ $this->widget('bootstrap.widgets.TbGridView', array(
     // 'filter'=>$xpath,
     'columns'=>array(
         'ID',
-        'WebsiteID',
-        'CategoryID',
+        array(
+            'name' => 'WebsiteID',
+            'value' => 'Website::getWebsiteName($data->WebsiteID)',
+        ), 
+        array(
+            'name' => 'CategoryID',
+            'value' => 'Category::getCategoryName($data->CategoryID)',
+        ), 
+        array(
+            'name' => 'LocationID',
+            'value' => 'Location::getLocationName($data->LocationID)',
+        ),    
         'URL',
-        'CategoryName',
         array(
             'class'=>'bootstrap.widgets.TbButtonColumn',
+            'template'=>'{update}{delete}',
         ),
     ),
 )); 
@@ -49,7 +39,6 @@ $this->widget('bootstrap.widgets.TbGridView', array(
         'bootstrap.widgets.TbButton',
         array(
             'label' => 'Back',
-            'size' => 'small',
             'htmlOptions'=>array(
                 'onclick'=> "history.go(-1);"
             )
@@ -60,9 +49,8 @@ $this->widget('bootstrap.widgets.TbGridView', array(
         'bootstrap.widgets.TbButton', array(
         'label'=>'Insert Xpath',
         'icon' => 'icon-plus-sign',
-        'url' => Yii::app()->createUrl('xpath/admin2'),
-        'type'=>'info', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
-        'size'=>'small', // null, 'large', 'small' or 'mini'
+        'url' => Yii::app()->createUrl('xpath/admin'),
+        'type'=>'primary', 
     ));  
     ?>    
 </div>
@@ -81,11 +69,3 @@ $this->widget('bootstrap.widgets.TbGridView', array(
  
 <?php $this->endWidget(); ?>
 
-<script type="text/javascript">
-
-    function newCategory()
-    {
-    	$( "#general-info" ).toggle(true);
-    }
-
-</script>

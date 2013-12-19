@@ -61,30 +61,13 @@ class CategoryurlController extends Controller
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate()
-	{
+	{		
 		$model=new Categoryurl;
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['URL']))
-		{
-			$model->URL=$_POST['URL'];
-			$model->CategoryName=$_POST['Name'];
+		if(isset($_POST['Categoryurl'])){
 			$model->WebsiteID = Yii::app()->session['current_web_id'];
-
-			$category = new Category;
-			$category = Category::model()->findByAttributes(array('Name' => $model->CategoryName));
-			$model->CategoryID = $category->ID;
-
-			if($model->save(false))
-			{
-				echo 'save successfully';
-				die(); 
-			}else{
-				echo 'save fails';
-				die();
-			}
+			$model->setAttributes($_POST['Categoryurl']);
+			if($model->save())
+				die("success");			
 		}
 
 		$this->renderPartial('create',array(

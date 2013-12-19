@@ -110,9 +110,9 @@ class Feedback extends CActiveRecord
 
 	public static function getStatus($status){
 		if($status == 'new'){
-			return CHtml::label($status, true, array("class" => "badge badge-warning"));
-		}else{
 			return CHtml::label($status, true, array("class" => "badge badge-info"));
+		}else{
+			return CHtml::label($status, true, array("class" => "badge badge-success"));
 		}
 	}
 }

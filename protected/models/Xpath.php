@@ -5,14 +5,20 @@
  *
  * The followings are the available columns in table 'xpath':
  * @property integer $ID
+ * @property string $URL
  * @property integer $WebsiteID
  * @property string $Name
  * @property string $Price
  * @property string $OriginalPrice
+ * @property string $ExpiredDate
  * @property string $Purchases
  * @property string $ImageURL
  * @property string $Address
  * @property string $Description
+ * @property string $Condition
+ *
+ * The followings are the available model relations:
+ * @property Website $website
  */
 class Xpath extends CActiveRecord
 {
@@ -32,12 +38,12 @@ class Xpath extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('WebsiteID, Name, Price, OriginalPrice, Purchases, ImageURL, Address, Description', 'required'),
+			array('URL, WebsiteID, Name, Price, OriginalPrice, ExpiredDate, Purchases, ImageURL, Address, Description, Condition', 'required'),
 			array('WebsiteID', 'numerical', 'integerOnly'=>true),
-			array('Name, Price, OriginalPrice, Purchases, ImageURL, Address, Description', 'length', 'max'=>300),
+			array('URL, Name, Price, OriginalPrice, ExpiredDate, Purchases, ImageURL, Address, Description, Condition', 'length', 'max'=>300),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('ID, WebsiteID, Name, Price, OriginalPrice, Purchases, ImageURL, Address, Description', 'safe', 'on'=>'search'),
+			array('ID, URL, WebsiteID, Name, Price, OriginalPrice, ExpiredDate, Purchases, ImageURL, Address, Description, Condition', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -49,6 +55,7 @@ class Xpath extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'website' => array(self::BELONGS_TO, 'Website', 'WebsiteID'),
 		);
 	}
 
@@ -59,14 +66,17 @@ class Xpath extends CActiveRecord
 	{
 		return array(
 			'ID' => 'ID',
+			'URL' => 'Url',
 			'WebsiteID' => 'Website',
 			'Name' => 'Name',
 			'Price' => 'Price',
 			'OriginalPrice' => 'Original Price',
+			'ExpiredDate' => 'Expired Date',
 			'Purchases' => 'Purchases',
 			'ImageURL' => 'Image Url',
 			'Address' => 'Address',
 			'Description' => 'Description',
+			'Condition' => 'Condition',
 		);
 	}
 
@@ -89,14 +99,17 @@ class Xpath extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('ID',$this->ID);
+		$criteria->compare('URL',$this->URL,true);
 		$criteria->compare('WebsiteID',$this->WebsiteID);
 		$criteria->compare('Name',$this->Name,true);
 		$criteria->compare('Price',$this->Price,true);
 		$criteria->compare('OriginalPrice',$this->OriginalPrice,true);
+		$criteria->compare('ExpiredDate',$this->ExpiredDate,true);
 		$criteria->compare('Purchases',$this->Purchases,true);
 		$criteria->compare('ImageURL',$this->ImageURL,true);
 		$criteria->compare('Address',$this->Address,true);
 		$criteria->compare('Description',$this->Description,true);
+		$criteria->compare('Condition',$this->Condition,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

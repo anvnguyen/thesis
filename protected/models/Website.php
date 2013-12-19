@@ -7,11 +7,12 @@
  * @property integer $ID
  * @property string $Name
  * @property string $URL
- * @property string $RawHTML
- * @property string $TidyHTML
+ * @property string $LastCrawl
  *
  * The followings are the available model relations:
+ * @property Categoryurl[] $categoryurls
  * @property Item[] $items
+ * @property Xpath[] $xpaths
  */
 class Website extends CActiveRecord
 {
@@ -31,11 +32,11 @@ class Website extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			// array('Name, URL, RawHTML, TidyHTML', 'required'),
+			array('Name, URL, LastCrawl', 'required'),
 			array('Name, URL', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('ID, Name, URL, RawHTML, TidyHTML', 'safe', 'on'=>'search'),
+			array('ID, Name, URL, LastCrawl', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -47,7 +48,9 @@ class Website extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'categoryurls' => array(self::HAS_MANY, 'Categoryurl', 'WebsiteID'),
 			'items' => array(self::HAS_MANY, 'Item', 'Website'),
+			'xpaths' => array(self::HAS_MANY, 'Xpath', 'WebsiteID'),
 		);
 	}
 
@@ -59,10 +62,8 @@ class Website extends CActiveRecord
 		return array(
 			'ID' => 'ID',
 			'Name' => 'Name',
-			'URL' => 'URL',
-			'LocationID' => 'Location',
-			'RawHTML' => 'Raw HTML',
-			'TidyHTML' => 'Repaired HTML',
+			'URL' => 'Url',
+			'LastCrawl' => 'Last Crawl',
 		);
 	}
 
@@ -87,14 +88,10 @@ class Website extends CActiveRecord
 		$criteria->compare('ID',$this->ID);
 		$criteria->compare('Name',$this->Name,true);
 		$criteria->compare('URL',$this->URL,true);
-		$criteria->compare('RawHTML',$this->RawHTML,true);
-		$criteria->compare('TidyHTML',$this->TidyHTML,true);
+		$criteria->compare('LastCrawl',$this->LastCrawl,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
-			'pagination' => array(
-				'pagesize' => 10	
-			)
 		));
 	}
 
@@ -107,5 +104,13 @@ class Website extends CActiveRecord
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
+	}
+	
+	public static function getWebsiteName($id){
+		$website = Website::model()->findByPk($id);
+		if($website !== NULL){
+			return $website->Name;
+		}
+		return NULL;
 	}
 }

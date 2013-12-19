@@ -2,7 +2,7 @@
 <?php $this->beginContent('//layouts/main'); ?>
 
   <div class="row-fluid">
-	<div class="span3">
+	<div class="span2">
 		<div class="sidebar-nav">
         
 		  <?php $this->widget('zii.widgets.CMenu', array(
@@ -14,6 +14,10 @@
           </i> Messages <span class="badge badge-success pull-right">' 
           . Feedback::model()->countByAttributes(array('status' => 'new')) . '</span>', 
           'url'=> array('feedback/admin')),
+        array('label'=>'<i class="icon icon-warning-sign">
+          </i> Exceptions <span class="badge badge-important pull-right">' 
+          . Log::model()->countByAttributes(array('Status' => 'new')) . '</span>', 
+          'url'=> array('log/admin')),
 				// Include the operations menu
 				array('label'=>'OPERATIONS','items'=>$this->menu),
 			),
@@ -58,7 +62,7 @@
         </table>
 		<div class="well">
         
-            <dl class="dl-horizontal">
+<!--             <dl class="dl-horizontal">
               <dt>Account status</dt>
               <dd>$1,234,002</dd>
               <dt>Open Invoices</dt>
@@ -68,11 +72,11 @@
               <dt>Converted Quotes</dt>
               <dd>$560,000</dd>
               
-            </dl>
+            </dl> -->
       </div>
 		
     </div><!--/span-->
-    <div class="span9">
+    <div class="span10">
     
     <?php if(isset($this->breadcrumbs)):?>
 		<?php $this->widget('zii.widgets.CBreadcrumbs', array(

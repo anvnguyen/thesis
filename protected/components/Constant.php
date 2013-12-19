@@ -7,6 +7,8 @@ class Constant
 		
 	}
 
+	public $numberOfNeighbors = 20;
+
 	/*This function is to get the html content of a url
 	*/
 	public function getContentURL($url)

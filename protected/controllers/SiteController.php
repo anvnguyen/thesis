@@ -7,10 +7,40 @@ class SiteController extends Controller
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
 	public $layout='//layouts/column2';
+
+	public function actionSchedule()
+	{
+		try {
+			//start crawl
+			foreach (Website::model()->findAll() as $website) {
+				Yii::app()->extractor->extractWebsite($website->ID);
+			}
+
+			//start recommender algorithm
+			Yii::app()->recommender->main();
+
+			//start send recommend email
+			
+			die("success");
+		} catch (CException $e) {
+			$log = new Log;
+			$log->Message = $e->getMessage();
+			$log->Code = $e->getCode();
+			$log->File = $e->getFile();
+			$log->Line = $e->getLine();
+			$log->Trace = Yii::app()->extractor->trace2String($e->getTrace());
+			$log->URL = 'Schedule task';
+			$log->save(false);
+
+			echo 'Exception occur';
+		}		
+	}
 	
 	public function actionTest()
 	{
+		print_r('<pre>');
 		Yii::app()->recommender->main();
+		print_r('</pre>');
 		die();
 		Yii::import('ext.yii-mail.YiiMailMessage');
         $message            = new YiiMailMessage;

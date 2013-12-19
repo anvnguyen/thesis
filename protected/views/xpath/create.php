@@ -4,57 +4,124 @@
 
 <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'xpath_form',
+    // 'type'=>'vertical',
     'type'=>'inline',
 	'enableAjaxValidation'=>false,
 )); ?>
 
-<?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'primary', 'size'=>'normal', 'label'=>'Try', 
-		'htmlOptions'=> array('onclick'=>'tryXpath($("#Name_Xpath").val())'))); echo ' ';?>
-<?php echo $form->textFieldRow($model, 'Name', array('class' => 'span8 input-medium', 'prepend'=>'Name',
-		'id' => 'Name_Xpath')); ?>
+<?php echo $form->textFieldRow($model, 'URL', array('id' => 'URL_Xpath', 'class' => 'span6')); ?>
+<?php $this->widget('bootstrap.widgets.TbButton', array(
+            'label'=>'View Tidy HTML', 
+            'htmlOptions' => array('onclick' => 'viewTidyHTML()')            
+        ));?>
+
+<br>
+<br>
+<?php 
+$this->widget('bootstrap.widgets.TbButton', array(
+    'type'=>'primary', 
+    'label'=>'Try', 
+	'htmlOptions'=> array('onclick'=>'tryXpath($("#Name_Xpath").val())'))); 
+echo ' ';
+?>
+<?php echo $form->textFieldRow($model, 'Name', array(
+    'prepend'=>'Name', 
+    'id' => 'Name_Xpath', 
+    'style' => "width:300%")); ?>
 
 <br> 
 <br>
-<?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'primary', 'size'=>'normal', 'label'=>'Try', 
-		'htmlOptions'=> array('onclick'=>'tryXpath($("#Price_Xpath").val())'))); echo ' ';?>
-<?php echo $form->textFieldRow($model, 'Price', array('class' => 'span8 input-medium', 'prepend'=>'Price',
+<?php $this->widget('bootstrap.widgets.TbButton', 
+    array(
+        'type'=>'primary', 
+        'label'=>'Try', 
+		'htmlOptions'=> array('onclick'=>'tryXpath($("#Price_Xpath").val())'))); 
+        echo ' ';
+?>
+<?php echo $form->textFieldRow($model, 'Price', 
+    array(
+        'style' => "width:300%", 
+        'prepend'=>'Price',
 		'id' => 'Price_Xpath')); ?> 
 <br>
 <br>   
-<?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'primary', 'size'=>'normal', 'label'=>'Try',
-		'htmlOptions'=> array('onclick'=>'tryXpath($("#Original_Price_Xpath").val())'))); echo ' ';?>		
-<?php echo $form->textFieldRow($model, 'OriginalPrice', array('class' => 'span8 input-medium', 'prepend'=>'Original Price',
+<?php $this->widget('bootstrap.widgets.TbButton', 
+    array(
+        'type'=>'primary', 
+        'label'=>'Try',
+		'htmlOptions'=> array('onclick'=>'tryXpath($("#Original_Price_Xpath").val())'))); 
+    echo ' ';
+?>		
+<?php echo $form->textFieldRow($model, 'OriginalPrice', 
+    array(
+        'style' => "width:300%",
+        'prepend'=>'Original Price',
 		'id' => 'Original_Price_Xpath',)); ?>
 <br> 
 <br>   
-<?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'primary', 'size'=>'normal', 'label'=>'Try',
-		'htmlOptions'=> array('onclick'=>'tryXpath($("#Address_Xpath").val())'))); echo ' ';?>
-<?php echo $form->textFieldRow( $model, 'Address', array('class' => 'span8 input-medium', 'prepend'=>'Address',
+<?php $this->widget('bootstrap.widgets.TbButton', 
+    array(
+        'type'=>'primary', 
+        'label'=>'Try',
+		'htmlOptions'=> array('onclick'=>'tryXpath($("#Address_Xpath").val())'))); 
+    echo ' ';?>
+<?php echo $form->textFieldRow($model, 'Address', 
+    array(
+        'style' => "width:300%", 
+        'prepend'=>'Address',
 		'id' => 'Address_Xpath',)); ?> 
 <br>   
 <br> 
  
-<?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'primary', 'size'=>'normal', 'label'=>'Try',
-		'htmlOptions'=> array('onclick'=>'tryXpath($("#Purchases_Xpath").val())'))); echo ' ';?>
-<?php echo $form->textFieldRow($model, 'Purchases', array('class' => 'span8 input-medium', 'prepend'=>'Purchases',
+<?php $this->widget('bootstrap.widgets.TbButton', 
+    array(
+        'type'=>'primary', 
+        'label'=>'Try',
+		'htmlOptions'=> array('onclick'=>'tryXpath($("#Purchases_Xpath").val())'))); 
+    echo ' ';
+?>
+<?php echo $form->textFieldRow($model, 'Purchases', 
+    array(
+        'style' => "width:300%", 
+        'prepend'=>'Purchases',
 		'id' => 'Purchases_Xpath',)); ?> 
 <br> 
 <br> 
-<?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'primary', 'size'=>'normal', 'label'=>'Try',
-		'htmlOptions'=> array('onclick'=>'tryXpath($("#ImageURL_Xpath").val())'))); echo ' ';?>
-<?php echo $form->textFieldRow($model, 'ImageURL', array('class' => 'span8 input-medium', 'prepend'=>'Image URL',
+<?php $this->widget('bootstrap.widgets.TbButton', 
+    array(
+        'type'=>'primary', 
+        'label'=>'Try',
+		'htmlOptions'=> array('onclick'=>'tryXpath($("#ImageURL_Xpath").val())'))); 
+    echo ' ';
+?>
+<?php echo $form->textFieldRow($model, 'ImageURL', 
+    array(
+        'style' => "width:300%",
+        'prepend'=>'Image URL',
 		'id' => 'ImageURL_Xpath',));  ?> 
 <br>
 <br>  
-<?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'primary', 'size'=>'normal', 'label'=>'Try',
+<?php $this->widget('bootstrap.widgets.TbButton', 
+    array(
+        'type'=>'primary', 
+        'label'=>'Try',
         'htmlOptions'=> array('onclick'=>'tryXpath($("#Description_Xpath").val())'))); echo ' ';?>
-<?php echo $form->textFieldRow($model, 'Description', array('class' => 'span8 input-medium', 'prepend'=>'Desciption',
+<?php echo $form->textFieldRow($model, 'Description', 
+    array(
+        'style' => "width:300%", 
+        'prepend'=>'Desciption',
         'id' => 'Description_Xpath',));  ?>
 <br>
 <br>
-<?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'primary', 'size'=>'normal', 'label'=>'Try',
+<?php $this->widget('bootstrap.widgets.TbButton', 
+    array(
+        'type'=>'primary', 
+        'label'=>'Try',
 		'htmlOptions'=> array('onclick'=>'tryXpath($("#Condition_Xpath").val())'))); echo ' ';?>
-<?php echo $form->textFieldRow($model, 'Condition', array('class' => 'span8 input-medium', 'prepend'=>'Condition',
+<?php echo $form->textFieldRow($model, 'Condition', 
+    array(
+        'style' => "width:300%", 
+        'prepend'=>'Condition',
 		'id' => 'Condition_Xpath',));  ?>
 <br>
 <br>
@@ -125,15 +192,11 @@ function tryAll()
     });
 }
 
-function dismiss_form()
-{
-	
-}
-
 function tryXpath($xpath)
 {
 	var data = {
         'xpath': $xpath,
+        'URL': $('#URL_Xpath').val(),
     };    
 
     $.ajax({
@@ -152,23 +215,13 @@ function tryXpath($xpath)
 }
     
 function createXpath()
-{
-    var data = {
-        'Name': $('#Name_Xpath').val(),
-        'Price': $('#Price_Xpath').val(),
-        'Address': $('#Address_Xpath').val(),
-        'Purchases': $('#Purchases_Xpath').val(),
-        'ImageURL': $('#ImageURL_Xpath').val(),
-    };    
-
+{ 
     $.ajax({
         type: 'POST',
         url: '<?php echo Yii::app()->createAbsoluteUrl("xpath/create"); ?>',
-        data: data,
+        data: $("#xpath_form").serialize(),
         success:function(data){
-            //collapse this form
-            $( "#general-info" ).toggle(false);
-            $.fn.yiiGridView.update('xpath_grid');
+            alert(data);
         },
         error: function(data) { // if error occured
             alert("Error occured.please try again");
@@ -177,5 +230,12 @@ function createXpath()
         dataType:'html'
     }); 
 }
+
+function viewTidyHTML()
+{
+    var url =  <?php echo "\"".Yii::app()->createUrl('xpath/viewTidyHTML')."\"" ?>  + "&url=" + $("#URL_Xpath").val();
+    window.open(url); 
+}
+
 
 </script>

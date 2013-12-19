@@ -15,189 +15,161 @@ class Extractor
 		$xpath = Xpath::model()->findByAttributes(array('WebsiteID' => $siteID));
 		$site = Website::model()->findByPk($xpath->WebsiteID);
 		$categoryURL = Categoryurl::model()->findAllBySql("SELECT * FROM categoryURL WHERE WebsiteID = '$siteID'");
+		$log = new Log;
+		$log->Message = "Crawl website " . $site->Name;
+		$log->Code = $site->ID;
+		$log->URL = $site->URL;
+		$log->save(false);
 		
-		foreach ($categoryURL as $url){
-			$this->getItemsFromCategoryURL($url, $site, $xpath, "many");		
+		foreach ($categoryURL as $cateUrl){
+			$urls = $this->extractItemURLs($cateUrl->URL);
+			$items = array();
+			foreach ($urls as $url) {	
+				$item = $this->extractItem($xpath, $url);
+				if($this->checkItem($item)){
+					$item->Website = $cateUrl->WebsiteID;
+					$item->Category = $cateUrl->CategoryID;
+					$item->Location = $cateUrl->LocationID;
+					$item->URL = $url;
+					array_push($items, $item);
+				}
+			}
+			Item::model()->deleteAllByAttributes(array('Website' => $siteID));
+			foreach ($items as $item) {				
+				$item->save(false);
+			}
 		}	
-		return 'success';
+
+		$site->save(false);
+	}
+
+	private function checkItem($item)
+	{
+		if($item == null)
+			return false;
+		if($item->Name == null or $item->Name = '')
+			return false;
+		if($item->Price == null or $item->Price = '')
+			return false;
+		return true;
 	}
 	
 	//extract only one item to see if the xpath is correct or not
-	public function extractItem($siteID, $xpath)
+	public function extractItem($xpath, $url=null)
 	{	
-		$site = Website::model()->findByPk($siteID);
-		$categoryURL = Categoryurl::model()->findByAttributes(array('WebsiteID' => $siteID));
-		Yii::app()->crawler->getContentURL($site->URL);
-		$urls = $this->extractItemURLs($categoryURL->URL);
-		foreach ($urls as $url) {
-			$tidyHTML = Yii::app()->crawler->getContentURL($url);		
-			//create new Dom document & Dom Xpath
+		try {
+			if($url==null){
+				$url = $xpath->URL;
+			}
+			$tidyHTML = Yii::app()->crawler->getContentURL($url);	
 			$doc = new DomDocument();
 			@$doc->loadHTML($tidyHTML);
 			$domXpath = new DomXpath($doc);
 		
-			$node = $domXpath->query($xpath->Name); // returns a DOMNodeList
-			if($node->length == 0){
-				continue;
-			}else{
-				$item = new Item();
-				//get Name
-				$item->Name = $node->item(0)->nodeValue; // get the first node in the list which is a DOMAttr
-				//get Price
+			$item = new Item();		
+
+			//get Name
+			if($xpath->Name != ''){
+				$node = $domXpath->query($xpath->Name);
+				if($node != null and $node->length != 0)
+					$item->Name = $node->item(0)->nodeValue; 
+			}			
+
+			//get Price
+			if($xpath->Price != ''){
 				$node = $domXpath->query($xpath->Price);
-				if($node->length !== 0)
+				if($node != null and $node->length !== 0)
 					$item->Price = $node->item(0)->nodeValue;
-	
-				//get OriginalPrice
+			}		
+
+			//get OriginalPrice
+			if($xpath->OriginalPrice != ''){
 				$node = $domXpath->query($xpath->OriginalPrice);
-				if($node->length !== 0)
+				if($node != null and $node->length !== 0)
 					$item->OriginalPrice = $node->item(0)->nodeValue;
-	
-	
-				//get Purchases
-				$node = $domXpath->query($xpath->Purchases);
-				if($node->length !== 0)
-					$item->Purchases = $node->item(0)->nodeValue;
-	
-				//get Image URL
-				$node = $domXpath->query($xpath->ImageURL);
-				if($node->length !== 0)
-					$item->ImageURL = $node->item(0)->value;				
-
-				//get Description
-				$node = $domXpath->query($xpath->Description);
-				if($node->length !== 0)
-					$item->Description = $node->item(0)->nodeValue;				
-
-				//get Condition
-				$node = $domXpath->query($xpath->Condition);
-				if($node->length !== 0)
-					$item->Condition = $node->item(0)->nodeValue;
-	
-				//get address
-				$node = $domXpath->query($xpath->Address);
-				if($node->length !== 0)
-					$item->Address = $node->item(0)->nodeValue;
-				return $item;				
 			}
+
+			//get Purchases
+			if($xpath->Purchases != ''){
+				$node = $domXpath->query($xpath->Purchases);
+				if($node != null and $node->length !== 0)
+					$item->Purchases = $node->item(0)->nodeValue;
+			}		
+
+			//get Image URL
+			if($xpath->ImageURL != ''){
+				$node = $domXpath->query($xpath->ImageURL);
+				if($node != null and $node->length !== 0)
+					$item->ImageURL = $node->item(0)->value;
+			}						
+
+			//get Description
+			if($xpath->Description != ''){
+				$node = $domXpath->query($xpath->Description);
+				if($node != null and $node->length !== 0)
+					$item->Description = $node->item(0)->nodeValue;	
+			}					
+
+			//get Condition
+			if($xpath->Condition != ''){
+				$node = $domXpath->query($xpath->Condition);
+				if($node != null and $node->length !== 0)
+					$item->Condition = $node->item(0)->nodeValue;
+			}
+			
+
+			//get address
+			if($xpath->Address != ''){
+				$node = $domXpath->query($xpath->Address);
+				if($node != null and $node->length !== 0)
+					$item->Address = $node->item(0)->nodeValue;
+			}		
+
+			return $item;
+		} catch (CException $e) {
+			$log = new Log;
+			$log->Message = $e->getMessage();
+			$log->Code = $e->getCode();
+			$log->File = $e->getFile();
+			$log->Line = $e->getLine();
+			$log->Trace = $this->trace2String($e->getTrace());
+			$log->URL = $url;
+			$log->save(false);
+
+			return NULL;
+		}				
+	}
+
+	public function trace2String($trace)
+	{
+		$result = '';
+		foreach ($trace as $line) {
+			$result += $line['file'];
+			$result += '(' . $line['line'] . '): ';
+			$result += $line['class'];
+			$result += $line['type'];
+			$result += $line['function'] . '()';
+			$result += ';';
 		}
-		
-		return ':( Extract failed';
+
+		return $result;
 	}
 	
 	//extract using only one xpath to see if this xpath is correct or not
-	public function extractOneXpath($siteID, $xpath)
+	public function extractOneXpath($xpath, $url)
 	{
-		$site = Website::model()->findByPk($siteID);
-		$categoryURL = Categoryurl::model()->findByAttributes(array('WebsiteID' => $siteID));
-		$urls = $this->extractItemURLs($categoryURL->URL);
-		foreach ($urls as $url) {
-			$tidyHTML = Yii::app()->crawler->getContentURL($url);
-		
-			//create new Dom document & Dom Xpath
-			$doc = new DomDocument();
-			@$doc->loadHTML($tidyHTML);
-			$domXpath = new DomXpath($doc);
-		
-			$node = $domXpath->query($xpath); // returns a DOMNodeList
-			if($node == null || $node->length == 0){
-				continue;
-			}else{
-				if($node->length !== 0)
-					return $node->item(0)->nodeValue;
-				else 
-					return ':( Extract failed';
-			}
+		if($xpath=='')
+			return ':( xpath cannot be empty';
+		$tidyHTML = Yii::app()->crawler->getContentURL($url);
+		$doc = new DomDocument();
+		@$doc->loadHTML($tidyHTML);
+		$domXpath = new DomXpath($doc);		
+		$node = $domXpath->query($xpath);
+		if($node == null || $node->length == 0){
+			return ':( Extract failed';
+		}else{
+			return $node->item(0)->nodeValue;
 		}
-		
-		return ':( Extract failed';
-	}
-	
-	//category: model of categoryURL
-	private function getItemsFromCategoryURL($categoryURL, $site, $xpath, $option)
-	{
-		$urls = $this->extractItemURLs($categoryURL->URL);
-		$items = array();
-		//for each url, craw the html and then apply xpath extract
-		foreach ($urls as $url) {
-			$tidyHTML = Yii::app()->crawler->getContentURL($url);
-	
-			//create new Dom document & Dom Xpath
-			$doc = new DomDocument();
-			@$doc->loadHTML($tidyHTML);
-			$domXpath = new DomXpath($doc);
-	
-			$node = $domXpath->query($xpath->Name); // returns a DOMNodeList
-			if($node == null || $node->length == 0)
-			{
-				continue;
-			}else{
-				$item = new Item;
-				//set website
-				$item->Website = $site->ID;
-	
-				//set category
-				$item->Category = $categoryURL->CategoryID;
-	
-				//set location
-				$item->Location = $site->LocationID;
-	
-				//set URL
-				$item->URL = $url;
-	
-				//get Name
-				$item->Name = $node->item(0)->nodeValue; // get the first node in the list which is a DOMAttr
-				//get Price
-				$node = $domXpath->query($xpath->Price);
-				if($node->length !== 0){
-					preg_match_all('!\d+!', $node->item(0)->nodeValue, $matches);
-					$item->Price = implode("", $matches[0]);
-				}					
-	
-				//get OriginalPrice
-				$node = $domXpath->query($xpath->OriginalPrice);
-				if($node->length !== 0){
-					preg_match_all('!\d+!', $node->item(0)->nodeValue, $matches);
-					$item->OriginalPrice = implode("", $matches[0]);
-				}					
-	
-
-				//get Purchases
-				$node = $domXpath->query($xpath->Purchases);
-				if($node->length !== 0)
-					$item->Purchases = $node->item(0)->nodeValue;
-	
-				//get Image URL
-				$node = $domXpath->query($xpath->ImageURL);
-				if($node->length !== 0)
-					$item->ImageURL = $node->item(0)->value;
-	
-				//get address
-				$node = $domXpath->query($xpath->Address);
-				if($node->length !== 0)
-					$item->Address = $node->item(0)->nodeValue;
-				//get Description
-				$node = $domXpath->query($xpath->Description);
-				if($node->length !== 0){
-					$item->Description = $node->item(0)->nodeValue;
-				}					
-				
-				//get Condition
-				$node = $domXpath->query($xpath->Condition);
-				if($node->length !== 0)
-					$item->Condition = $node->item(0)->nodeValue;
-				
-				//add to array
-				if($option == "one")
-					return $item;
-				else{
-					//TODO: check if this item exists or not					
-					$item->save(false);
-				}					
-			}
-		}
-		
-		return 'success';
 	}
 	
 	private function extractItemURLs($url)

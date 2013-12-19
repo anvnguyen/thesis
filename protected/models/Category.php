@@ -94,12 +94,14 @@ class Category extends CActiveRecord
 
 	public static function getCategoryNames()
 	{
-		$categories = Category::model()->findAllBySql("SELECT * FROM Category");
-		$list = array();
-		foreach ($categories as $category) {
-			array_push($list, $category->Name);
-		}
+		return CHtml::listData(Category::model()->findAllBySql('SELECT * FROM Category'), 'ID','Name' );
+	}
 
-		return $list;
+	public static function getCategoryName($id){
+		$category = Category::model()->findByPk($id);
+		if($category !== NULL){
+			return $category->Name;
+		}
+		return NULL;
 	}
 }

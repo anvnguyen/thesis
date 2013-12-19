@@ -5,13 +5,13 @@
  *
  * The followings are the available columns in table 'itemitem':
  * @property integer $ID
- * @property integer $userID
- * @property integer $itemID
+ * @property integer $itemID1
+ * @property integer $itemID2
  * @property double $ratings
  *
  * The followings are the available model relations:
- * @property User $user
- * @property Item $item
+ * @property Item $itemID20
+ * @property Item $itemID10
  */
 class Itemitem extends CActiveRecord
 {
@@ -31,12 +31,12 @@ class Itemitem extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('userID, itemID, ratings', 'required'),
-			array('userID, itemID', 'numerical', 'integerOnly'=>true),
+			array('itemID1, itemID2, ratings', 'required'),
+			array('itemID1, itemID2', 'numerical', 'integerOnly'=>true),
 			array('ratings', 'numerical'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('ID, userID, itemID, ratings', 'safe', 'on'=>'search'),
+			array('ID, itemID1, itemID2, ratings', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -48,8 +48,8 @@ class Itemitem extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'user' => array(self::BELONGS_TO, 'User', 'userID'),
-			'item' => array(self::BELONGS_TO, 'Item', 'itemID'),
+			'itemID20' => array(self::BELONGS_TO, 'Item', 'itemID2'),
+			'itemID10' => array(self::BELONGS_TO, 'Item', 'itemID1'),
 		);
 	}
 
@@ -60,8 +60,8 @@ class Itemitem extends CActiveRecord
 	{
 		return array(
 			'ID' => 'ID',
-			'userID' => 'User',
-			'itemID' => 'Item',
+			'itemID1' => 'Item Id1',
+			'itemID2' => 'Item Id2',
 			'ratings' => 'Ratings',
 		);
 	}
@@ -85,8 +85,8 @@ class Itemitem extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('ID',$this->ID);
-		$criteria->compare('userID',$this->userID);
-		$criteria->compare('itemID',$this->itemID);
+		$criteria->compare('itemID1',$this->itemID1);
+		$criteria->compare('itemID2',$this->itemID2);
 		$criteria->compare('ratings',$this->ratings);
 
 		return new CActiveDataProvider($this, array(

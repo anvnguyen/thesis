@@ -40,8 +40,7 @@ class CrawlerController extends Controller
 			$response['TidyHTML'] = $tidyHTML;
 			echo json_encode($response);
 			die();
-		}else
-		{
+		}else{
 			echo json_encode('No URL provided');
 		}
 	}

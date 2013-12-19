@@ -29,7 +29,7 @@ class Useritem extends CActiveRecord
 		return array(
 			array('userID, itemID, rating', 'required'),
 			array('userID, itemID', 'numerical', 'integerOnly'=>true),
-			array('rating', 'length', 'max'=>11),
+			// array('rating', 'length', 'max'=>11),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('ID, userID, itemID, rating', 'safe', 'on'=>'search'),

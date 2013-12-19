@@ -1,23 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "categoryurl".
+ * This is the model class for table "log".
  *
- * The followings are the available columns in table 'categoryurl':
+ * The followings are the available columns in table 'log':
  * @property integer $ID
- * @property integer $WebsiteID
- * @property integer $CategoryID
  * @property string $URL
- * @property string $CategoryName
+ * @property string $Message
+ * @property string $Code
+ * @property string $File
+ * @property string $Line
+ * @property string $Trace
+ * @property string $Time
+ * @property string $Status
  */
-class Categoryurl extends CActiveRecord
+class Log extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'categoryurl';
+		return 'log';
 	}
 
 	/**
@@ -28,13 +32,13 @@ class Categoryurl extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			// array('WebsiteID, CategoryID, URL, CategoryName', 'required'),
-			array('WebsiteID, CategoryID, LocationID', 'numerical', 'integerOnly'=>true),
-			array('URL', 'length', 'max'=>300),
-			array('URL', 'required'),
+			array('URL, Message, Code, File, Line, Trace, Time', 'required'),
+			array('URL', 'length', 'max'=>1000),
+			array('Code, Line, Status', 'length', 'max'=>10),
+			array('File', 'length', 'max'=>300),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('ID, WebsiteID, CategoryID, URL', 'safe', 'on'=>'search'),
+			array('ID, URL, Message, Code, File, Line, Trace, Time, Status', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,10 +60,14 @@ class Categoryurl extends CActiveRecord
 	{
 		return array(
 			'ID' => 'ID',
-			'WebsiteID' => 'Website',
-			'CategoryID' => 'Category',
-			'LocationID' => 'Location',
-			'URL' => 'URL',
+			'URL' => 'Url',
+			'Message' => 'Message',
+			'Code' => 'Code',
+			'File' => 'File',
+			'Line' => 'Line',
+			'Trace' => 'Trace',
+			'Time' => 'Time',
+			'Status' => 'Status',
 		);
 	}
 
@@ -82,9 +90,14 @@ class Categoryurl extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('ID',$this->ID);
-		$criteria->compare('WebsiteID', Yii::app()->session['current_web_id']);
-		$criteria->compare('CategoryID',$this->CategoryID);
 		$criteria->compare('URL',$this->URL,true);
+		$criteria->compare('Message',$this->Message,true);
+		$criteria->compare('Code',$this->Code,true);
+		$criteria->compare('File',$this->File,true);
+		$criteria->compare('Line',$this->Line,true);
+		$criteria->compare('Trace',$this->Trace,true);
+		$criteria->compare('Time',$this->Time,true);
+		$criteria->compare('Status',$this->Status,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -95,10 +108,30 @@ class Categoryurl extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Categoryurl the static model class
+	 * @return Log the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
+	}
+
+	public static function getStatus($status)
+	{
+		if($status == 'new'){
+			return CHtml::label($status, true, array("class" => "badge badge-warning"));
+		}else{
+			return CHtml::label($status, true, array("class" => "badge badge-info"));
+		}
+	}
+
+	public static function getTrace($trace)
+	{
+		$lines = explode(';', $trace);
+		$results = '';
+		foreach ($lines as $line) {
+			$results .= '<p>' . $line . '</p>';			
+		}
+
+		return $results;
 	}
 }

@@ -97,14 +97,14 @@ class Location extends CActiveRecord
 
 	public static function getLocations()
 	{
-		$model = new Location;
-		$locations = array();
-		$records = $model->findAllBySql('select * from location');
+		return CHtml::listData(Location::model()->findAllBySql('select * from location'), 'ID','Location' );
+	}
 
-		foreach ($records as $record) {
-			array_push($locations, $record->Location);
+	public static function getLocationName($id){
+		$location = Location::model()->findByPk($id);
+		if($location !== NULL){
+			return $location->Location;
 		}
-
-		return $locations;
+		return NULL;
 	}
 }

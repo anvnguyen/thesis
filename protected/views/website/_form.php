@@ -4,11 +4,11 @@
 $form = $this->beginWidget(
     'bootstrap.widgets.TbActiveForm',
     array(
-        'id' => 'horizontalForm',
+        'id' => 'update_website',
         'type' => 'horizontal',
         'htmlOptions'=>array(
            'onsubmit'=>"return false;",/* Disable normal form submit */
-           'onkeypress'=>" if(event.keyCode == 13){ getHTML(); } " /* Do ajax call when user presses enter key */
+           'onkeypress'=>" if(event.keyCode == 13){ insertCategory(); } " /* Do ajax call when user presses enter key */
          ),
     )
 ); 
@@ -41,91 +41,31 @@ $form = $this->beginWidget(
     ?>
 
     <?php 
-        echo $form->dropDownListRow(
-            $model, 
-            'LocationID', 
-            Location::getLocations(),
-            array(
-                'class'=>'span2',
-				'id' => 'website_location',
-            )
-        ); 
+    //     echo $form->dropDownListRow(
+    //         $model, 
+    //         'LocationID', 
+    //         Location::getLocations(),
+    //         array(
+    //             'class'=>'span2',
+				// 'id' => 'website_location',
+    //         )
+    //     ); 
     ?>
 
     <div class="controls">
     <?php
-        $this->widget('bootstrap.widgets.TbButton', array(
-            'buttonType'=>'submit', 
-            'type'=>'btn', 
-            'icon' => 'icon-plus-sign',
-            'label'=>'Add new location',
-            'size' => 'small',
-            'htmlOptions'=>array(
-                'onclick'=>'addLocation();',
-            ),
-        ));
+        // $this->widget('bootstrap.widgets.TbButton', array(
+        //     'buttonType'=>'submit', 
+        //     'type'=>'btn', 
+        //     'icon' => 'icon-plus-sign',
+        //     'label'=>'Add new location',
+        //     'htmlOptions'=>array(
+        //         'onclick'=>'addLocation();',
+        //     ),
+        // ));
     ?>
-    </div> 
+    </div>   
 
-    <br>   
-
-    <div class="controls">
-        <!-- Button to get repaired HTML -->
-        <?php 
-            $this->widget('bootstrap.widgets.TbButton', array(
-                    'buttonType'=>'submit', 
-                    'type'=>'btn', 
-                    'icon' => 'icon-download',
-                    'label'=>'Get HTML',
-                    'size' => 'small',
-                    'htmlOptions'=>array(
-                        'onclick'=>'getHTML();',
-                    ),
-                )
-            ); 
-        ?>
-    </div>
-    <br>
-    <!-- text area to contain raw HTML -->
-    <?php 
-        echo $form->textAreaRow($model, 'RawHTML', array('class'=>'span10', 'rows'=>8, 'id' => 'textarea_rawHTML')); 
-    ?>
-
-    <div style="text-align:right">
-        <?php 
-            $this->widget(
-                'bootstrap.widgets.TbButton', array(
-                'label'=>'View in browser',
-                'icon' => 'icon-eye-open',
-                 'htmlOptions'=>array(
-                    'onclick'=>'viewRawHTML();',
-                ),
-                'type'=>'info', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
-                'size'=>'small', // null, 'large', 'small' or 'mini'
-            )); 
-        ?>
-    </div>          
-
-    <br>
-    <!-- text area to contain repaired HTML -->
-    <?php 
-        echo $form->textAreaRow($model, 'TidyHTML', array('class'=>'span10', 'rows'=>8, 'id' => 'textarea_repairedHTML')); 
-    ?>
-
-    <div style="text-align:right">
-        <?php 
-            $this->widget(
-                'bootstrap.widgets.TbButton', array(
-                'label'=>'View in browser',
-                'icon' => 'icon-eye-open',
-                 'htmlOptions'=>array(
-                    'onclick'=>'viewRepairedHTML();',
-                ),
-                'type'=>'info', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
-                'size'=>'small', // null, 'large', 'small' or 'mini'
-            )); 
-        ?>
-    </div> 
 </fieldset> 
 
 <div class="form-actions">
@@ -133,7 +73,6 @@ $form = $this->beginWidget(
         'bootstrap.widgets.TbButton',
         array(
             'label' => 'Back',
-            'size' => 'small',
             'htmlOptions'=>array(
                 'onclick'=> "history.go(-1);"
             )
@@ -147,8 +86,7 @@ $form = $this->beginWidget(
          'htmlOptions'=>array(
             'onclick'=>'insertCategory();',
         ),
-        'type'=>'info', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
-        'size'=>'small', // null, 'large', 'small' or 'mini'
+        'type'=>'primary', // null, 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
     ));  
     ?>    
 </div>
@@ -209,23 +147,23 @@ unset($form);
 
     function insertCategory()
     {
-        var name = $("#website_name").val();
-        var url = $("#website_url").val();
-        var rawHTML = $("#textarea_rawHTML").val();
-        var tidyHTML = $("#textarea_repairedHTML").val();
-
-        if(name.length == 0) {
+        if($("#website_name").val().length == 0) {
             alert ('Name cannot be empty');
             return false;
-        }else if(url.length == 0){
+        }else if($("#website_url").val().length == 0){
             alert ('URL cannot be empty');
             return false;
-        }else if(rawHTML.length == 0 || tidyHTML.length == 0){
-            alert('Please get HTML of URL');
-        }
-        else {
-
-            window.location.assign(<?php echo '"' . Yii::app()->createUrl('categoryUrl/admin') . '"';?>)            
+        }else{
+            var url = <?php echo "'" . Yii::app()->createUrl("website/update2") . "'"; ?>;
+            $.ajax({
+                type: "POST",
+                data: $("#update_website").serialize(),
+                url: url,
+            }).done(function( msg ) {
+                if(msg == "success")
+                    window.location.assign(<?php echo '"' . Yii::app()->createUrl('categoryUrl/admin') . '"';?>)
+            });
+                        
         }        
     }
 

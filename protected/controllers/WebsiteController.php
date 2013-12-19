@@ -32,7 +32,7 @@ class WebsiteController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update', 'update2', 'crawlWebsite'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -83,6 +83,7 @@ class WebsiteController extends Controller
 				
 		}
 
+		Yii::app()->session['current_web_id'] = null;
 		$this->render('create',array(
 			'model'=>$model,
 			'xpath'=>$xpath,
@@ -99,20 +100,28 @@ class WebsiteController extends Controller
 	{
 		Yii::app()->session['current_web_id'] = $id;
 		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Website']))
-		{
-			$model->attributes=$_POST['Website'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->ID));
-		}
-
 		$this->render('update',array(
 			'model'=>$model,
 		));
+	}
+
+	public function actionUpdate2()
+	{
+		if(isset($_POST['Website'])){
+			if(Yii::app()->session['current_web_id'] != ""){
+				$model = Website::model()->findByPk(Yii::app()->session['current_web_id']);
+				$model->attributes=$_POST['Website'];
+				if($model->save(false))
+					die("success");
+			}else{
+				$model = new Website;
+				$model->setAttributes($_POST['Website']);
+				if($model->save(false)){
+					Yii::app()->session['current_web_id'] = Website::model()->findByAttributes(array('URL' => $model->URL))->ID;
+					die("success");
+				}			
+			}			
+		}
 	}
 
 	/**
@@ -181,5 +190,11 @@ class WebsiteController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+
+	public function actionCrawlWebsite()
+	{
+		Yii::app()->extractor->extractWebsite(24);
+		echo "done";
 	}
 }

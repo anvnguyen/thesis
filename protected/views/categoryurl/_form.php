@@ -5,7 +5,7 @@
 ?>
 
 <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
-	'id'=>'category-form',
+	'id'=>'category_form',
 	'type'=>'horizontal',
 	'enableAjaxValidation'=>false,
 )); ?>
@@ -15,8 +15,7 @@ echo $form->textFieldRow(
     $model,
     'URL',
     array(
-    	'class' => 'span5', 
-        'prepend' => 'URL', 
+    	'class' => 'span6', 
         'id' => 'URL_Category'
     )
 );
@@ -24,12 +23,23 @@ echo $form->textFieldRow(
 
 <?php 
 echo $form->dropDownListRow(
-	$model, 
-	'CategoryName', 
-	Category::getCategoryNames(), 
+    $model, 
+    'CategoryID', 
+    Category::getCategoryNames(), 
     array(
         'class' => 'span3', 
         'id' => 'name_category'
+    )
+); 
+?>
+<?php 
+echo $form->dropDownListRow(
+	$model, 
+	'LocationID', 
+	Location::getLocations(), 
+    array(
+        'class' => 'span3', 
+        'id' => 'location'
     )
 ); 
 ?>
@@ -47,8 +57,6 @@ echo $form->dropDownListRow(
     ?>
 </div>
 
-<?php $this->endWidget(); ?>
-
 <div class="modal-footer" id="modal_footer">
     <?php 
     $this->widget('bootstrap.widgets.TbButton', array(
@@ -62,30 +70,18 @@ echo $form->dropDownListRow(
     <?php 
     $this->widget('bootstrap.widgets.TbButton', array(
         'label'=>'Cancel',
-        'htmlOptions'=>array('onclick'=>'dismiss_form()'),
+        'htmlOptions'=>array('onclick'=>'cancel()'),
     )); 
     ?>
 </div>
 
-<!-- Modal to show new category form -->
-<?php $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'category_modal')); ?>
- 
-    <div class="modal-header">
-        <a class="close" data-dismiss="modal">&times;</a>
-        <h4>New category</h4>
-    </div>
-     
-    <div class="modal-body">
-        <div id="new_category"></div>
-    </div>
- 
 <?php $this->endWidget(); ?>
 
 <script>
 
-function dismiss_form()
+function cancel()
 {
-	$( "#general-info" ).toggle(false);
+	window.location = <?php echo "'" . Yii::app()->createUrl("website/admin") . "'";   ?>  
 }
 
 function addCategory()
@@ -106,21 +102,18 @@ function addCategory()
     
 function createCategoryUrl()
 {
-    var theContents = document.getElementById('name_category')[document.getElementById('name_category').selectedIndex].innerHTML;
-    var data = {
-        'URL': $('#URL_Category').val(),
-        'Name': theContents,
-    };    
-
     $.ajax({
         type: 'POST',
         url: '<?php echo Yii::app()->createAbsoluteUrl("categoryUrl/create"); ?>',
-        data: data,
+        data: $("#category_form").serialize(),
         success:function(data){
-        	$( "#general-info" ).toggle(false);
-            $.fn.yiiGridView.update('category_grid');
+        	if(data!=="success"){
+                $("#category_form").html(data);
+            }else{
+                $.fn.yiiGridView.update('category_grid');
+            }
         },
-        error: function(data) { // if error occured
+        error: function(data) { 
             alert("Error occured.please try again");
             alert(data);
         },

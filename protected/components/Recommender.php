@@ -18,9 +18,6 @@ class Recommender
 	/* List of user means base on $listUsers and their behaviours */
 	public $userMean;
 
-	/*List of item and users who evaluate this item*/
-	public $itemUsers;
-
 	/*List of user and items which this user evaluate*/
 	public $userItems;
 	
@@ -91,7 +88,6 @@ class Recommender
 		$this->listUsers = array();
 		$this->listItems = array();
 		$this->actions = array();
-		$this->itemUsers = array();
 		$this->userItems = array();
 
 		foreach (Actions::model()->findAll() as $model) {
@@ -110,18 +106,29 @@ class Recommender
 			//calculate array for item - item algorithm	
 			$exist = false;
 			foreach ($this->userItems as $userItem) {
-				if($userID == $userItem->userID && $itemID == $userItem->itemID){
-					$userItem->sum += =$behaviour->times * $this->actions[$behaviour->action];
+				if($behaviour->userID == $userItem->userID && $behaviour->itemID == $userItem->itemID){
+					$userItem->sum += $behaviour->times * $this->actions[$behaviour->action];
 					$userItem->count += 1;
 					$exist = true;
 				}				
 			}
 
 			if($exist == false){
+				$userItem = new Useritem;
+				$userItem->userID = $behaviour->userID;
+				$userItem->itemID = $behaviour->itemID;
+				$userItem->sum = $behaviour->times * $this->actions[$behaviour->action];
+				$userItem->count = 1;
 
+				array_push($this->userItems, $userItem);
 			}			
 		}
 
+		Useritem::model()->deleteAll();
+		foreach ($this->userItems as $userItem) {
+			$userItem->rating = $userItem->sum/$userItem->count;			
+			$userItem->save();			
+		}
 		
 		$this->getItemCategory();
 		$this->calculateUserMean();		
@@ -379,14 +386,59 @@ class Recommender
 	}
 
 	public function createItemItemCF(){
-		
+		$itemItems = array();
+		for($i=0; $i< count($this->listItems)-1; $i++)
+		{			
+			for ($j=$i+1; $j < count($this->listItems); $j++) { 
+				$userIDs = $this->calculateCommonUsers($this->listItems[$i], $this->listItems[$j]);
+				$tu = 0;
+				$mau1 = 0;
+				$mau2 = 0;
+				foreach ($userIDs as $userID) {
+					$rUi = 0;
+					$rUj = 0;
+					foreach ($this->userItems as $userItem) {
+						if($userItem->userID == $userID && $userItem->itemID == $this->listItems[$i]){
+							$rUi = $userItem->rating - $this->userMean[$userID];
+						}else if($userItem->userID == $userID && $userItem->itemID == $this->listItems[$j]){
+							$rUj = $userItem->rating - $this->userMean[$userID];
+						}
+
+						if($rUi !== 0 && $rUj !== 0)
+							break;
+					}
+					$tu += $rUj * $rUi;
+					$mau1 += pow($rUi, 2);
+					$mau2 += pow($rUj, 2);
+				}
+				if($mau1 !== 0 && $mau2 !== 0){
+					$itemItem = new Itemitem;
+					$itemItem->itemID1 = $this->listItems[$i];
+					$itemItem->itemID2 = $this->listItems[$j];
+					$mau = sqrt($mau1) * sqrt($mau2);
+					$itemItem->ratings = $mau/$tu;
+					array_push($itemItems, $itemItem);
+				}				
+			}
+		}
+
+		Itemitem::model()->deleteAll();
+		foreach ($itemItems as $itemItem) {
+			$itemItem->save();
+		}
 	}
 
 	public function calculateCommonUsers($itemID1, $itemID2){
-		Itemitem::model()->deleteAll();
-		foreach ($variable as $key => $value) {
-			
-		}		
+		$user1 = array();
+		$user2 = array();
+		foreach ($this->userItems as $userItem) {
+			if($userItem->itemID == $itemID1)
+				array_push($user1, $userItem->userID);
+			else if($userItem->itemID == $itemID2)
+				array_push($user2, $userItem->userID);
+		}
+
+		return array_intersect($user1, $user2);
 	}	
 }
 

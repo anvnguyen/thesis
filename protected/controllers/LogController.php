@@ -1,6 +1,6 @@
 <?php
 
-class XpathController extends Controller
+class LogController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -15,7 +15,7 @@ class XpathController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			// 'postOnly + delete', // we only allow deletion via POST request
+			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 
@@ -27,46 +27,59 @@ class XpathController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow',  
+			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
-			array('allow', 
-				'actions'=>array('create','update', 'viewTidyHTML', 'tryXpath', 'tryAll'),
-				'users'=>array('*'),
+			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+				'actions'=>array('create','update'),
+				'users'=>array('@'),
 			),
-			array('allow', 
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('*'),
+				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
 		);
 	}
-	
+
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionView($id)
+	{
+		$log = $this->loadModel($id);
+		$log->Status = 'viewed';
+		$log->save(false);
+		$this->render('view',array(
+			'model'=>$log,
+		));
+	}
+
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate()
-	{				
-		if(isset($_POST['Xpath'])){	
-			$xpath = Xpath::model()->findByAttributes(array('WebsiteID' => Yii::app()->session['current_web_id']));	
-			if($xpath == NULl){
-				$xpath=new Xpath;			
-				$xpath->WebsiteID = Yii::app()->session['current_web_id'];
-			}
-			$xpath->setAttributes($_POST["Xpath"]);		
-			$xpath->WebsiteID = Yii::app()->session['current_web_id'];	
+	{
+		$model=new Log;
 
-			if($xpath->save(false))
-				die('Success'); 
-			else
-				die('Failed');
-		}else{
-			die("No Xpath provided");
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+
+		if(isset($_POST['Log']))
+		{
+			$model->attributes=$_POST['Log'];
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->ID));
 		}
+
+		$this->render('create',array(
+			'model'=>$model,
+		));
 	}
 
 	/**
@@ -77,9 +90,13 @@ class XpathController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-		if(isset($_POST['Xpath']))
+
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+
+		if(isset($_POST['Log']))
 		{
-			$model->attributes=$_POST['Xpath'];
+			$model->attributes=$_POST['Log'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->ID));
 		}
@@ -108,24 +125,10 @@ class XpathController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Xpath');
+		$dataProvider=new CActiveDataProvider('Log');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
-	}
-
-	public function actionViewTidyHTML()
-	{
-		$url = @$_GET["url"];
-		// var_dump($url);
-		if($url != NULL){
-			$rawHTML = Yii::app()->crawler->getRawHTML($url);
-			$tidyHTML = Yii::app()->crawler->getTidyHTML($rawHTML);
-			$this->renderText($tidyHTML);
-		}else{
-			die("No URL provided");
-		}
-		
 	}
 
 	/**
@@ -133,26 +136,26 @@ class XpathController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Xpath();
-		//check if there exists any xpath
-		$websiteID = Yii::app()->session['current_web_id'];
-		$model = Xpath::model()->findByAttributes(array('WebsiteID' => $websiteID));
-		if($model == null){
-			$model = new Xpath();
-		}
-		$this->render('create', array('model' => $model));
+		$model=new Log('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Log']))
+			$model->attributes=$_GET['Log'];
+
+		$this->render('admin',array(
+			'model'=>$model,
+		));
 	}
-	
+
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return Xpath the loaded model
+	 * @return Log the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=Xpath::model()->findByPk($id);
+		$model=Log::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -160,43 +163,14 @@ class XpathController extends Controller
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param Xpath $model the model to be validated
+	 * @param Log $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='xpath-form'){
+		if(isset($_POST['ajax']) && $_POST['ajax']==='log-form')
+		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
-		}
-	}
-	
-	public function actionRepairHTML()
-	{
-		if(isset($_REQUEST['url'])){
-			echo Yii::app()->crawler->getContentURL($_REQUEST['url']);
-		}else{
-			echo "No URL provided";
-		}
-	}	
-
-	public function actionTryXpath()
-	{
-		if(isset($_POST["xpath"])){	
-			echo Yii::app()->extractor->extractOneXpath($_POST["xpath"], $_POST["URL"]);
-		}else{
-			echo "No xpath or attribute provided";
-		}
-	}
-	
-	public function actionTryAll()
-	{
-		if(isset($_POST["Xpath"])){
-			$model = new Xpath();
-			$model->attributes = $_POST["Xpath"];					
-			$item = Yii::app()->extractor->extractItem($model);
-			$this->renderPartial('_view', array('item' => $item));
-		}else{
-			echo "No xpath or attribute provided";
 		}
 	}
 }
