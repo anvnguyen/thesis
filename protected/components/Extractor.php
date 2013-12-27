@@ -14,9 +14,11 @@ class Extractor
 	{
 		$xpath = Xpath::model()->findByAttributes(array('WebsiteID' => $siteID));
 		$site = Website::model()->findByPk($xpath->WebsiteID);
+		$site->LastCrawl = date('m/d/Y h:i:s a', time());
+		$site->save(false);
 		$categoryURL = Categoryurl::model()->findAllBySql("SELECT * FROM categoryURL WHERE WebsiteID = '$siteID'");
 		$log = new Log;
-		$log->Message = "Crawl website " . $site->Name;
+		$log->Message = "Start crawling website " . $site->Name;
 		$log->Code = $site->ID;
 		$log->URL = $site->URL;
 		$log->save(false);
@@ -40,16 +42,21 @@ class Extractor
 			}
 		}	
 
-		$site->save(false);
+		
+		$log = new Log;
+		$log->Message = "Finish crawling website " . $site->Name;
+		$log->Code = $site->ID;
+		$log->URL = $site->URL;
+		$log->save(false);
 	}
 
 	private function checkItem($item)
 	{
 		if($item == null)
 			return false;
-		if($item->Name == null or $item->Name = '')
+		if($item->Name == null or $item->Name == '')
 			return false;
-		if($item->Price == null or $item->Price = '')
+		if($item->Price == null or $item->Price == '')
 			return false;
 		return true;
 	}
@@ -71,22 +78,24 @@ class Extractor
 			//get Name
 			if($xpath->Name != ''){
 				$node = $domXpath->query($xpath->Name);
-				if($node != null and $node->length != 0)
+				if($node != null and $node->length !== 0)
 					$item->Name = $node->item(0)->nodeValue; 
 			}			
 
 			//get Price
 			if($xpath->Price != ''){
 				$node = $domXpath->query($xpath->Price);
-				if($node != null and $node->length !== 0)
-					$item->Price = $node->item(0)->nodeValue;
+				if($node != null and $node->length !== 0){					
+					$item->Price = filter_var($node->item(0)->nodeValue, FILTER_SANITIZE_NUMBER_INT);
+				}					
 			}		
 
 			//get OriginalPrice
 			if($xpath->OriginalPrice != ''){
 				$node = $domXpath->query($xpath->OriginalPrice);
-				if($node != null and $node->length !== 0)
-					$item->OriginalPrice = $node->item(0)->nodeValue;
+				if($node != null and $node->length !== 0){
+					$item->OriginalPrice = filter_var($node->item(0)->nodeValue, FILTER_SANITIZE_NUMBER_INT);
+				}
 			}
 
 			//get Purchases

@@ -28,7 +28,15 @@ $this->widget(
 		'LastCrawl',
 		array(
 	        'class'=>'bootstrap.widgets.TbButtonColumn',
-	        'htmlOptions'=>array('style'=>'width: 50px'),
+	        'template' => '{crawl}{view}{update}{delete}',
+	        'htmlOptions'=>array('style'=>'width: 100px'),
+	        'buttons' => array(
+	        	'crawl' => array(
+	        		'label' => 'Crawl',
+	        		'icon' => 'icon-circle-arrow-down',
+	        		'url' => 'Yii::app()->createUrl("website/crawl", array("id" => $data->ID))',
+	        		),
+	        	),
 	    ),
 	),
 )); ?>

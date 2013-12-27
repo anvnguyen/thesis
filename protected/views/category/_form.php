@@ -16,7 +16,7 @@ echo $form->textFieldRow(
     $model,
     'Name',
     array(
-    	'class' => 'span3', 
+    	'class' => 'span7', 
 		'id' => 'Category',
     )
 );

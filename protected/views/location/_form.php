@@ -14,7 +14,7 @@ echo $form->textFieldRow(
     $model,
     'Location',
     array(
-    	'class' => 'span3', 
+    	'class' => 'span7', 
         'prepend' => 'Location', 
         'id' => 'Name_Location'
     )
@@ -54,7 +54,7 @@ function createLocation()
         url: '<?php echo Yii::app()->createAbsoluteUrl("location/create"); ?>',
         data: data,
         success:function(data){
-            $('#Website_LocationID').append('<option value="' + data + '">' + data + '</option>');
+            $('#location_name').append('<option value="' + data + '">' + data + '</option>');
         },
         error: function(data) { // if error occured
             alert("Error occured.please try again");

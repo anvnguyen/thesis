@@ -32,7 +32,7 @@ class WebsiteController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update', 'update2', 'crawlWebsite'),
+				'actions'=>array('create','update', 'update2', 'crawl'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -74,13 +74,11 @@ class WebsiteController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Website']))
-		{
+		if(isset($_POST['Website'])){
 			$model->attributes=$_POST['Website'];
 			if($model->save()){				
 				$this->redirect(array('view','id'=>$model->ID));
-			}
-				
+			}				
 		}
 
 		Yii::app()->session['current_web_id'] = null;
@@ -132,7 +130,6 @@ class WebsiteController extends Controller
 	public function actionDelete($id)
 	{
 		$this->loadModel($id)->delete();
-
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
@@ -164,6 +161,12 @@ class WebsiteController extends Controller
 		));
 	}
 
+	public function actionCrawl()
+	{
+		Yii::app()->extractor->extractWebsite($_REQUEST['id']);
+		echo 'success';
+	}
+
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -192,9 +195,9 @@ class WebsiteController extends Controller
 		}
 	}
 
-	public function actionCrawlWebsite()
-	{
-		Yii::app()->extractor->extractWebsite(24);
-		echo "done";
-	}
+	// public function actionCrawlWebsite()
+	// {
+	// 	Yii::app()->extractor->extractWebsite(24);
+	// 	echo "done";
+	// }
 }

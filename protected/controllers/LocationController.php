@@ -67,16 +67,14 @@ class LocationController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Location']))
-		{
+		if(isset($_POST['Location'])){
 			$model->Location=$_POST['Location'];
-
-			if($model->save())
+			if($model->save(false))
 				echo $model->Location;
 			die();
 		}
 
-		$this->renderPartial('create',array(
+		$this->renderPartial('_form',array(
 			'model'=>$model,
 		));
 	}

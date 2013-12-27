@@ -33,10 +33,10 @@
                         array('label'=>'Behaviours', 'url'=>array('/behaviour/index')),
                         array('label'=>'Items', 'url'=>array('/item/admin')),
                         array('label'=>'Websites', 'url'=>array('/website/admin')),
-                        array('label'=>'Graphs & Charts', 'url'=>array('/site/page', 'view'=>'graphs')),
-                        array('label'=>'Tables', 'url'=>array('/site/page', 'view'=>'tables')),
-						array('label'=>'Interface', 'url'=>array('/site/page', 'view'=>'interface')),
-                        array('label'=>'Typography', 'url'=>array('/site/page', 'view'=>'typography')),
+                        // array('label'=>'Graphs & Charts', 'url'=>array('/site/page', 'view'=>'graphs')),
+                        // array('label'=>'Tables', 'url'=>array('/site/page', 'view'=>'tables')),
+						// array('label'=>'Interface', 'url'=>array('/site/page', 'view'=>'interface')),
+                        // array('label'=>'Typography', 'url'=>array('/site/page', 'view'=>'typography')),
                         /*array('label'=>'Gii generated', 'url'=>array('customer/index')),*/
                         array(
                             'label'=>'My Account <span class="caret"></span>', 

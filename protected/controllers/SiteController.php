@@ -17,7 +17,7 @@ class SiteController extends Controller
 			}
 
 			//start recommender algorithm
-			Yii::app()->recommender->main();
+			// Yii::app()->recommender->main();
 
 			//start send recommend email
 			
@@ -38,6 +38,11 @@ class SiteController extends Controller
 	
 	public function actionTest()
 	{
+		print_r('<pre>');
+		var_dump(Yii::app()->recommender->getTopNItemItem(3, 7000));
+		print_r('</pre>');
+
+		die();
 		print_r('<pre>');
 		Yii::app()->recommender->main();
 		print_r('</pre>');

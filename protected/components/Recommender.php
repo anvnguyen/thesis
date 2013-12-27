@@ -51,7 +51,7 @@ class Recommender
 			if($row->OriginalPrice !== 0 and $row->Price < $row->OriginalPrice )
 				$list = $list + array( $row->ID => $row->Price/$row->OriginalPrice, );
 		}
-		asort($list);		
+		arsort($list);		
 		return array_keys(array_slice($list, 0, $nItems, true));
 	}
 
@@ -59,15 +59,15 @@ class Recommender
 	/*This function is to get top n items that users most interest  in
 	@return array of model
 	*/
-	// public function getTopNMostInterest($nItems){
-	// 	$model = Mostinterest::model()->findAll();
-	// 	$list = array();
-	// 	foreach ($model as $row) {
-	// 		$list = $list + array( $row->itemID => $row->rating, );
-	// 	}
-	// 	asort($list);		
-	// 	return array_keys(array_slice($list, 0, $nItems, true));
-	// }
+	public function getTopNMostInterest($nItems){
+		$model = Mostinterest::model()->findAll();
+		$list = array();
+		foreach ($model as $row) {
+			$list = $list + array( $row->itemID => $row->rating, );
+		}
+		arsort($list);		
+		return array_keys(array_slice($list, 0, $nItems, true));
+	}
 
 
 	public function getTopNUserUser($nItems, $userID){
@@ -76,7 +76,21 @@ class Recommender
 		foreach ($model as $row) {
 			$list = $list + array( $row->itemID => $row->rating, );
 		}
-		asort($list);		
+		arsort($list);		
+		return array_keys(array_slice($list, 0, $nItems, true));
+	}
+
+	public function getTopNItemItem($nItems, $itemID){
+		$itemItem = Itemitem::model()->findAllBySql("SELECT * from itemitem WHERE itemID1=$itemID or itemID2=$itemID");
+		$list = array();
+		foreach ($itemItem as $record) {
+			if($record->itemID1 == $itemID){
+				$list += array($record->itemID2 => $record->ratings);
+			}else{
+				$list += array( $record->itemID1 => $record->ratings);
+			}			
+		}
+		arsort($list);
 		return array_keys(array_slice($list, 0, $nItems, true));
 	}
 	
@@ -387,8 +401,7 @@ class Recommender
 
 	public function createItemItemCF(){
 		$itemItems = array();
-		for($i=0; $i< count($this->listItems)-1; $i++)
-		{			
+		for($i=0; $i< count($this->listItems)-1; $i++){			
 			for ($j=$i+1; $j < count($this->listItems); $j++) { 
 				$userIDs = $this->calculateCommonUsers($this->listItems[$i], $this->listItems[$j]);
 				$tu = 0;

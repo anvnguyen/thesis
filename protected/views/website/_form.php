@@ -39,33 +39,6 @@ $form = $this->beginWidget(
             )
         );
     ?>
-
-    <?php 
-    //     echo $form->dropDownListRow(
-    //         $model, 
-    //         'LocationID', 
-    //         Location::getLocations(),
-    //         array(
-    //             'class'=>'span2',
-				// 'id' => 'website_location',
-    //         )
-    //     ); 
-    ?>
-
-    <div class="controls">
-    <?php
-        // $this->widget('bootstrap.widgets.TbButton', array(
-        //     'buttonType'=>'submit', 
-        //     'type'=>'btn', 
-        //     'icon' => 'icon-plus-sign',
-        //     'label'=>'Add new location',
-        //     'htmlOptions'=>array(
-        //         'onclick'=>'addLocation();',
-        //     ),
-        // ));
-    ?>
-    </div>   
-
 </fieldset> 
 
 <div class="form-actions">

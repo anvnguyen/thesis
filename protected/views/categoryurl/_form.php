@@ -20,7 +20,6 @@ echo $form->textFieldRow(
     )
 );
 ?>  
-
 <?php 
 echo $form->dropDownListRow(
     $model, 
@@ -32,17 +31,7 @@ echo $form->dropDownListRow(
     )
 ); 
 ?>
-<?php 
-echo $form->dropDownListRow(
-	$model, 
-	'LocationID', 
-	Location::getLocations(), 
-    array(
-        'class' => 'span3', 
-        'id' => 'location'
-    )
-); 
-?>
+
 <div class="controls">
     <?php
         $this->widget('bootstrap.widgets.TbButton', array( 
@@ -57,32 +46,53 @@ echo $form->dropDownListRow(
     ?>
 </div>
 
+<?php 
+echo $form->dropDownListRow(
+	$model, 
+	'LocationID', 
+	Location::getLocations(), 
+    array(
+        'class' => 'span3', 
+        'id' => 'location_name'
+    )
+); 
+?>
+
+<div class="controls">
+    <?php
+        $this->widget('bootstrap.widgets.TbButton', array( 
+            'type'=>'btn', 
+            'icon' => 'icon-plus-sign',
+            'label'=>'Add new location',
+            'size' => 'small',
+            'htmlOptions'=>array(
+                'onclick'=>'addLocation()',
+            ),
+        ));
+    ?>
+</div>
+
+<?php $this->endWidget(); ?>
+
 <div class="modal-footer" id="modal_footer">
-    <?php 
+<?php
     $this->widget('bootstrap.widgets.TbButton', array(
         'type'=>'primary',
         'label'=>'Create',
         'htmlOptions'=>array(
             'onclick'=>'createCategoryUrl()',
             ),
-    )); 
+    ));
     ?>
-    <?php 
+<?php
     $this->widget('bootstrap.widgets.TbButton', array(
         'label'=>'Cancel',
         'htmlOptions'=>array('onclick'=>'cancel()'),
-    )); 
+    ));
     ?>
 </div>
 
-<?php $this->endWidget(); ?>
-
 <script>
-
-function cancel()
-{
-	window.location = <?php echo "'" . Yii::app()->createUrl("website/admin") . "'";   ?>  
-}
 
 function addCategory()
 {
@@ -99,7 +109,23 @@ function addCategory()
         dataType:'html'
     });
 }
-    
+
+function addLocation()
+{
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo Yii::app()->createUrl("location/create"); ?>',
+        success:function(data){
+            $('#new_location').html(data);
+            $('#location_modal').modal({show: true});
+        },
+        error: function(data) { // if error occured
+            alert(data);
+        },
+        dataType:'html'
+    });
+}    
+
 function createCategoryUrl()
 {
     $.ajax({
@@ -107,18 +133,18 @@ function createCategoryUrl()
         url: '<?php echo Yii::app()->createAbsoluteUrl("categoryUrl/create"); ?>',
         data: $("#category_form").serialize(),
         success:function(data){
-        	if(data!=="success"){
+            if(data!=="success"){
                 $("#category_form").html(data);
             }else{
                 $.fn.yiiGridView.update('category_grid');
             }
         },
-        error: function(data) { 
+        error: function(data) {
             alert("Error occured.please try again");
             alert(data);
         },
         dataType:'html'
-    }); 
+    });
 }
 
 </script>
