@@ -33,7 +33,7 @@
 
 	<div class="row">
 		<?php echo $form->label($model,'time'); ?>
-		<?php echo $form->textField($model,'time'); ?>
+		<?php echo $form->textField($model,'times'); ?>
 	</div>
 
 	<div class="row buttons">

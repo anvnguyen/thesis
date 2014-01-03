@@ -20,8 +20,6 @@ class SendEmail
 			$topUserUserIDs = Yii::app()->recommender->getTopNUserUser($numOfUseUser, $user->ID);	
 
 			$messageBody = $this->generateMessageBodyForRecommendMail($topPriceIDs, $topInterestIDs, $topUserUserIDs);
-			var_dump($messageBody);
-			return;
 			$this->send($messageBody, $this->emailTitleForRecommender(), $user->email);
 		}
 	}

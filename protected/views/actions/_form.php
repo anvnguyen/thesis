@@ -26,6 +26,12 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'score'); ?>
+		<?php echo $form->textField($model,'score',array('size'=>60,'maxlength'=>100)); ?>
+		<?php echo $form->error($model,'score'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'description'); ?>
 		<?php echo $form->textField($model,'description',array('size'=>60,'maxlength'=>500)); ?>
 		<?php echo $form->error($model,'description'); ?>

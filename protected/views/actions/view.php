@@ -22,6 +22,7 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'action',
+		'score',
 		'description',
 	),
 )); ?>

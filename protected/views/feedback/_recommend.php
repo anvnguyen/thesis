@@ -26,7 +26,9 @@ body {background-color:#d4d4d4; margin:0px; padding:0px; -webkit-text-size-adjus
 						<img src="http://support.activecampaign.com/bin/image_2464734.gif" width="547" height="20" style="display:block;"/>
 					</td>
 				</tr>
+				
 				<tr>
+					
 					<td colspan="2" valign="top" align="center" bgcolor="#ffffff">		
 						<table border="0" cellpadding="0" cellspacing="0" height="100%" width="461">
 							<tr>
@@ -36,27 +38,85 @@ body {background-color:#d4d4d4; margin:0px; padding:0px; -webkit-text-size-adjus
 									</a>
 								</td>
 								<td valign="top" align="right" width="50%">
-									<a href="http://awebzone.tk/" title="Xem tất cả" target="_blank">
-										<img src="http://awebzone.tk/image_5246719.gif" width="193" height="40" alt="Xem tất cả" border="0" style="display:block;"/>
-									</a>
+									<!-- image -->
 								</td>
 							</tr>				
 							<tr><td colspan="2" height="20">&nbsp;</td></tr>
 							<tr>
 								<td colspan="2" valign="top" height="37">
-									<a href="http://awebzone.tk/" title="Xem tất cả" target="_blank">
-										<img src="http://awebzone.tk/image_4694876.gif" width="461" height="37" alt="Xem tất cả" border="0" style="display:block;"/>
-									</a>
+									<!-- image -->
 								</td>
 							</tr>
 						</table>		
 					</td>
 				</tr>
+				<?php 
+					for ($i = 0; $i < 1; $i++) {
+						?>
+						<tr bgcolor="#f4faff">
+					<td width="270px" align ="center">
+						Du lịch Sapa 2 ngày 3 đêm
+					</td >
+					<td width = "270px" align ="center">
+						Chu du Sapa - Cát Cát -Hàm Rồng
+					</td>
+				</tr>
+				<tr bgcolor="#f4faff"> 
+					<td width="270px" align ="center">
+						<img src="http://muachung10.vcmedia.vn/thumb_w/500/i:product/48/6/4hnut/tour-du-lich-ha-noi-sapa-2-ngay-1-dem.jpg" height="170" border="0" width="270" >
+					</td >
+					<td width = "270px" align ="center">
+						<img src="http://muachung10.vcmedia.vn/thumb_w/500/i:product/50/7/0cnf5/ngam-nhin-tuyet-trang-tai-sapa-ca-ve-tau-xe.jpg" height="170" border="0" width="270" >
+					</td>
+				</tr>
+				
+				<tr bgcolor="#f9edbe">
+					<td >
+					<table width = "270px">
+					<tr>
+					<td align = "center">
+						<b width = "150px" >
+						1.202.000đ
+						</b>
+					</td>
+					<td	align ="left">
+						<a href ="http://muachung.vn/du-lich/tour-du-lich-ha-noi-sapa-2-ngay-1-dem-47539.html">
+						<img src="http://chungmua.com/cdn/deal-imgs/ha-noi/1-banner/icon.png" width ="116px" height ="37px" align ="right">
+						</a>
+					</td>
+					</tr>
+					</table>
+					</td >
+					
+					<td >
+					<table width = "270px">
+					<tr>
+					<td align = "center">
+						<b width = "150px" text-align ="center">
+						1.199.000đ
+						</b>
+					</td>
+					<td align = "left">
+						<a href ="http://muachung.vn/du-lich/tour-du-lich-ha-noi-sapa-2-ngay-1-dem-47539.html">
+						<img src="http://chungmua.com/cdn/deal-imgs/ha-noi/1-banner/icon.png" width ="116px" height ="37px" align ="right">
+						</a>
+					</td>
+					</tr>
+					</table>
+					</td >
+				</tr>
+						<?php
+
+					}
+				?>				
+	
+				<!-- Footer -->
 				<tr>
 					<td colspan="2" valign="top" bgcolor="#ffffff">
 						<img src="http://support.activecampaign.com/bin/image_4407116.gif" width="547" height="69" style="display:block;"/>
 					</td>
 				</tr>
+				
 				<tr>
 					<td colspan="2" valign="top">
 						<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">

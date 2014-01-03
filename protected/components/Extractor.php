@@ -14,29 +14,30 @@ class Extractor
 	{
 		$xpath = Xpath::model()->findByAttributes(array('WebsiteID' => $siteID));
 		$site = Website::model()->findByPk($xpath->WebsiteID);
-		$site->LastCrawl = date('m/d/Y h:i:s a', time());
-		$site->save(false);
+		$site->saveAttributes(array('LastCrawl'));
 		$categoryURL = Categoryurl::model()->findAllBySql("SELECT * FROM categoryURL WHERE WebsiteID = '$siteID'");
 		$log = new Log;
 		$log->Message = "Start crawling website " . $site->Name;
 		$log->Code = $site->ID;
 		$log->URL = $site->URL;
 		$log->save(false);
+		//back up before delete
+		Item::model()->deleteAllByAttributes(array('Website' => $siteID));
 		
 		foreach ($categoryURL as $cateUrl){
 			$urls = $this->extractItemURLs($cateUrl->URL);
 			$items = array();
-			foreach ($urls as $url) {	
-				$item = $this->extractItem($xpath, $url);
+			foreach ($urls as $url) {
+				$item = $this->extractItem($xpath, $url, $site->URL);
 				if($this->checkItem($item)){
 					$item->Website = $cateUrl->WebsiteID;
 					$item->Category = $cateUrl->CategoryID;
 					$item->Location = $cateUrl->LocationID;
-					$item->URL = $url;
+					$item->URL = $this->normalizeURL($url, $site->URL);
 					array_push($items, $item);
 				}
 			}
-			Item::model()->deleteAllByAttributes(array('Website' => $siteID));
+			
 			foreach ($items as $item) {				
 				$item->save(false);
 			}
@@ -50,23 +51,15 @@ class Extractor
 		$log->save(false);
 	}
 
-	private function checkItem($item)
-	{
-		if($item == null)
-			return false;
-		if($item->Name == null or $item->Name == '')
-			return false;
-		if($item->Price == null or $item->Price == '')
-			return false;
-		return true;
-	}
-	
+		
 	//extract only one item to see if the xpath is correct or not
-	public function extractItem($xpath, $url=null)
+	public function extractItem($xpath, $url=null, $websiteURL=null)
 	{	
 		try {
 			if($url==null){
 				$url = $xpath->URL;
+			}else{
+				$url = $this->normalizeURL($url, $websiteURL);
 			}
 			$tidyHTML = Yii::app()->crawler->getContentURL($url);	
 			$doc = new DomDocument();
@@ -86,7 +79,7 @@ class Extractor
 			if($xpath->Price != ''){
 				$node = $domXpath->query($xpath->Price);
 				if($node != null and $node->length !== 0){					
-					$item->Price = filter_var($node->item(0)->nodeValue, FILTER_SANITIZE_NUMBER_INT);
+					$item->Price = $this->getPrice($node->item(0)->nodeValue);
 				}					
 			}		
 
@@ -94,7 +87,7 @@ class Extractor
 			if($xpath->OriginalPrice != ''){
 				$node = $domXpath->query($xpath->OriginalPrice);
 				if($node != null and $node->length !== 0){
-					$item->OriginalPrice = filter_var($node->item(0)->nodeValue, FILTER_SANITIZE_NUMBER_INT);
+					$item->OriginalPrice = $this->getPrice($node->item(0)->nodeValue);
 				}
 			}
 
@@ -147,6 +140,19 @@ class Extractor
 
 			return NULL;
 		}				
+	}
+
+	public function extractImageURL($xpath)
+	{
+		$items = Item::model()->findAllByAttributes(array('Website' => 37, 'Location'=>20));
+		foreach ($items as $item) {
+			$item->ImageURL = $this->extractOneXpath($xpath, $item->URL);			
+		}
+
+		foreach ($items as $item) {
+			$item->save(false);
+		}
+		die("success");
 	}
 
 	public function trace2String($trace)
@@ -222,6 +228,36 @@ class Extractor
 		$query = sprintf('//%s', $tag);
 		return $xpath->query($query);
 	}
+
+	private function checkItem($item)
+	{
+		if(empty($item))
+			return false;
+		if(empty($item->Name))
+			return false;
+		if(empty($item->Price))
+			return false;
+		return true;
+	}
+
+	public function normalizeURL($url, $websiteURL)
+	{
+		if(substr($url, 0, 1) == "/"){
+			return $websiteURL . $url;
+		}else
+			return $url;
+	}
+
+	public function getPrice($str) {
+		if(empty($str) or $str == " " or $str == null or $str=="") return $str;
+        preg_match_all('/\d+/', filter_var($str, FILTER_SANITIZE_NUMBER_INT), $matches);
+        if(count($matches[0]) >= 1){
+        	return $matches[0][0];
+        }else{
+        	return $str;
+        }
+        
+    }
 }
 
 ?>

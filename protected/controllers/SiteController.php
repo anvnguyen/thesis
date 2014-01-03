@@ -17,10 +17,11 @@ class SiteController extends Controller
 			}
 
 			//start recommender algorithm
-			// Yii::app()->recommender->main();
+			Yii::app()->recommender->main();
 
 			//start send recommend email
-			
+			Yii::app()->sendemail->sendRecommenderMail();
+
 			die("success");
 		} catch (CException $e) {
 			$log = new Log;
@@ -38,25 +39,35 @@ class SiteController extends Controller
 	
 	public function actionTest()
 	{
-		print_r('<pre>');
-		var_dump(Yii::app()->recommender->getTopNItemItem(3, 7000));
-		print_r('</pre>');
+		// print_r('<pre>');
+		// var_dump(Yii::app()->recommender->getTopNItemItem(3, 7000));
+		// print_r('</pre>');
 
-		die();
-		print_r('<pre>');
-		Yii::app()->recommender->main();
-		print_r('</pre>');
-		die();
-		Yii::import('ext.yii-mail.YiiMailMessage');
-        $message            = new YiiMailMessage;
-          //this points to the file test.php inside the view path
-       // $message->view = "test";
-       $message->subject    = 'My TestSubject';
-       $message->setBody('<h1>this is test mail</h1>', 'text/html');                
-       $message->addTo('nguyen.tran@softfoundry.com');
-       $message->from = 'hotdealbk@gmail.com';   
-       $message->attach(Swift_Attachment::fromPath('test.pdf'));
-       Yii::app()->mail->send($message);  
+		// die();
+		// print_r('<pre>');
+		// Yii::app()->recommender->main();
+		// print_r('</pre>');
+		// die();
+		// Yii::import('ext.yii-mail.YiiMailMessage');
+  //       $message            = new YiiMailMessage;
+  //         //this points to the file test.php inside the view path
+  //      // $message->view = "test";
+  //      $message->subject    = 'My TestSubject';
+  //      $message->setBody('<h1>this is test mail</h1>', 'text/html');                
+  //      $message->addTo('nguyen.tran@softfoundry.com');
+  //      $message->from = 'hotdealbk@gmail.com';   
+  //      $message->attach(Swift_Attachment::fromPath('test.pdf'));
+  //      Yii::app()->mail->send($message);  
+		// $messageBody = Yii::app()->sendemail->generateMessageBodyForRecommendMail("", "", "");
+		// Yii::app()->sendemail->send($messageBody, "Giới thiệu sản phẩm", "an.cse09@gmail.com");
+
+		// var_dump(Yii::app()->extractor->getPrice("150000-47"));
+		// var_dump(Yii::app()->extractor->getPrice("150000đ"));
+		// var_dump(Yii::app()->extractor->getPrice("150.000"));
+
+		Yii::app()->extractor->extractImageURL(
+			"//div[@class='main-slider-content c16']/ul[@class='sliders-wrap-inner']/li/img/attribute::src"
+			);
 	}
 
 	/**

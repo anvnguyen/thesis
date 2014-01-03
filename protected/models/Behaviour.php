@@ -84,7 +84,7 @@ class Behaviour extends CActiveRecord
 		$criteria->compare('userID',$this->userID);
 		$criteria->compare('action',$this->action,true);
 		$criteria->compare('itemID',$this->itemID);
-		$criteria->compare('time',$this->time);
+		$criteria->compare('time',$this->times);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

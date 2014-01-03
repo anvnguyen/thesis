@@ -49,7 +49,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'userID',
 		'action',
 		'itemID',
-		'time',
+		'times',
 		array(
 			'class'=>'CButtonColumn',
 		),

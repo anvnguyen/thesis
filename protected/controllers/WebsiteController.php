@@ -164,7 +164,7 @@ class WebsiteController extends Controller
 	public function actionCrawl()
 	{
 		Yii::app()->extractor->extractWebsite($_REQUEST['id']);
-		echo 'success';
+		$this->redirect(Yii::app()->createUrl('website/admin'));
 	}
 
 	/**

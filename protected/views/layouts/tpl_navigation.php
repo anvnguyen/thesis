@@ -25,12 +25,23 @@
                             'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
                             'items'=>array(
                                 array('label'=>'Users', 
-                                    'url'=>array('/user/index')),
+                                    'url'=>array('/user/admin')),
                                 array('label'=>'Roles', 
-                                    'url'=>array('/role/index')),
+                                    'url'=>array('/role/admin')),
                             )
                         ),
-                        array('label'=>'Behaviours', 'url'=>array('/behaviour/index')),
+                        array(
+                            'label'=>'Recommender System <span class="caret"></span>', 
+                            'url'=>array('#'),
+                            'itemOptions'=>array('class'=>'dropdown','tabindex'=>"-1"),
+                            'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
+                            'items'=>array(
+                                array('label'=>'Behaviours', 
+                                    'url'=>array('/behaviour/admin')),
+                                array('label'=>'Actions', 
+                                    'url'=>array('/actions/admin')),
+                            )
+                        ),
                         array('label'=>'Items', 'url'=>array('/item/admin')),
                         array('label'=>'Websites', 'url'=>array('/website/admin')),
                         // array('label'=>'Graphs & Charts', 'url'=>array('/site/page', 'view'=>'graphs')),
