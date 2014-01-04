@@ -65,9 +65,11 @@ class SiteController extends Controller
 		// var_dump(Yii::app()->extractor->getPrice("150000đ"));
 		// var_dump(Yii::app()->extractor->getPrice("150.000"));
 
-		Yii::app()->extractor->extractImageURL(
-			"//div[@class='main-slider-content c16']/ul[@class='sliders-wrap-inner']/li/img/attribute::src"
-			);
+		// Yii::app()->extractor->extractImageURL(
+		// 	"//div[@class='viewer iviewer_cursor c30']/img/attribute::src"
+		// 	);
+		// die(Yii::app()->crawler->getRawHTML("http://www.zalora.vn/Ao-So-Mi-In-Hoa-Tiet-Tay-Ngan-Nam-89907.html"));
+		Yii::app()->recommender->calculateBestPrice();
 	}
 
 	/**

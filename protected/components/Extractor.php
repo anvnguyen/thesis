@@ -144,7 +144,7 @@ class Extractor
 
 	public function extractImageURL($xpath)
 	{
-		$items = Item::model()->findAllByAttributes(array('Website' => 37, 'Location'=>20));
+		$items = Item::model()->findAllByAttributes(array('Website' => 44, 'ImageURL'=>''));
 		foreach ($items as $item) {
 			$item->ImageURL = $this->extractOneXpath($xpath, $item->URL);			
 		}
@@ -255,8 +255,7 @@ class Extractor
         	return $matches[0][0];
         }else{
         	return $str;
-        }
-        
+        }        
     }
 }
 

@@ -42,14 +42,13 @@ class Recommender
 	*/
 	public function getTopNBestPrice($nItems, $categoryID = null){
 		if($categoryID){
-			$model = Item::model()->findAllByAttributes(array('Category' => $categoryID, ));	
+			$model = Bestprice::model()->findAllByAttributes(array('categoryID' => $categoryID, ));	
 		}else{
-			$model =  Item::model()->findAll();
+			$model =  Bestprice::model()->findAll();
 		}
 		$list = array();
-		foreach ($model as $row) {
-			if($row->OriginalPrice !== 0 and $row->Price < $row->OriginalPrice )
-				$list = $list + array( $row->ID => $row->Price/$row->OriginalPrice, );
+		foreach ($model as $row) {			
+			$list = $list + array( $row->itemID => $row->rate, );
 		}
 		arsort($list);		
 		return array_keys(array_slice($list, 0, $nItems, true));
@@ -153,6 +152,28 @@ class Recommender
 		
 		//get most interesting
 		$this->setTopNMostInterest();
+	}
+
+	public function calculateBestPrice()
+	{
+		Bestprice::model()->deleteAll();
+		foreach (Category::model()->findAll() as $category) {
+			$model = Item::model()->findAllByAttributes(array('Category' => $category->ID, ));	
+			$list = array();
+			foreach ($model as $row) {
+				if($row->OriginalPrice != 0 and $row->Price < $row->OriginalPrice )
+					$list = $list + array( $row->ID => $row->Price/$row->OriginalPrice, );
+			}
+			asort($list);
+			$list = array_reverse($list, true);	
+			foreach (array_slice($list, 0, 10, true) as $itemID=>$rate) {
+			 	$bestprice = new Bestprice;
+			 	$bestprice->itemID = $itemID;
+			 	$bestprice->categoryID = $category->ID;
+			 	$bestprice->rate = $rate;
+			 	$bestprice->save(false);
+			}
+		}			
 	}
 	
 	private function getItemCategory(){
