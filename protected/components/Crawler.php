@@ -60,19 +60,21 @@ class Crawler
 
 	private function repairHtmlContent($html)
 	{
-		if (function_exists('tidy_repair_string')) {
-			$config = array(
-				'clean'=>true, 
-				'show-body-only'=>true
-				);
-			$encoding = 'utf8';
-			$html = @tidy_repair_string($html, $config, $encoding);
-			$html = mb_convert_encoding($html, 'html-entities', 'utf-8'); 
+		// if (function_exists('tidy_repair_string')) {
+		// 	$config = array(
+		// 		'clean'=>true, 
+		// 		'show-body-only'=>true
+		// 		);
+		// 	$encoding = 'utf8';
+		// 	$html = @tidy_repair_string($html, $config, $encoding);
+		// 	$html = mb_convert_encoding($html, 'html-entities', 'utf-8'); 
 
-			return $html;
-		}else{
-			die('Function "tidy_repair_string" does not exist');
-		}
+		// 	return $html;
+		// }else{
+		// 	die('Function "tidy_repair_string" does not exist');
+		// }
+
+		return $html;
 	}
 }
 
