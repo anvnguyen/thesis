@@ -94,7 +94,7 @@ class Category extends CActiveRecord
 
 	public static function getCategoryNames()
 	{
-		return CHtml::listData(Category::model()->findAllBySql('SELECT * FROM Category'), 'ID','Name' );
+		return CHtml::listData(Category::model()->findAllBySql('SELECT * FROM category'), 'ID','Name' );
 	}
 
 	public static function getCategoryName($id){
