@@ -101,7 +101,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=thesis',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => '',
+			'password' => 'D0AB062372',
 			'charset' => 'utf8',
 			'class'   => 'CDbConnection'
 		),
