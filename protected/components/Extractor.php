@@ -27,19 +27,26 @@ class Extractor
 		foreach ($categoryURL as $cateUrl){
 			$urls = $this->extractItemURLs($cateUrl->URL);
 			$items = array();
+			// print_r('<prev>');
 			foreach ($urls as $url) {
 				$item = $this->extractItem($xpath, $url, $site->URL);
+				// var_dump($item->attributes);
 				if($this->checkItem($item)){
 					$item->Website = $cateUrl->WebsiteID;
 					$item->Category = $cateUrl->CategoryID;
 					$item->Location = $cateUrl->LocationID;
 					$item->URL = $this->normalizeURL($url, $site->URL);
 					array_push($items, $item);
+					$item->save(false);
 				}
 			}
+			// print_r('</prev>');
+			// die();
 			
-			foreach ($items as $item) {				
-				$item->save(false);
+			// foreach ($items as $item) {				
+			// 	$item->save(false);
+			// }
+
 			}
 		}	
 
@@ -61,6 +68,7 @@ class Extractor
 			}else{
 				$url = $this->normalizeURL($url, $websiteURL);
 			}
+			// var_dump($url);
 			$tidyHTML = Yii::app()->crawler->getContentURL($url);	
 			$doc = new DomDocument();
 			@$doc->loadHTML($tidyHTML);
@@ -193,8 +201,8 @@ class Extractor
 		$results = $this->getHtmlTags($TidyHTML, 'a');
 	
 		$array = array();
-		foreach ($results as $query) {
-			$url = @$query->attributes->item(0)->nodeValue;
+		foreach ($results as $query) {			
+			$url = @$query->attributes->item(1)->nodeValue;
 			if($this->checkLink($url) && !in_array($url, $array)){				
 				array_push($array, $url);
 			}
