@@ -42,10 +42,6 @@ return array(
 
 	// application components
 	'components'=>array(
-		'urlManager'=>array(
-            'urlFormat'=>'path',
-            'caseSensitive'=>false,
-        ),
 		'authManager'=>array(
 		    'class'=>'CDbAuthManager',
 		    'connectionID'=>'db',
@@ -101,7 +97,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=thesis',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => 'D0AB062372',
+			'password' => '',
 			'charset' => 'utf8',
 			'class'   => 'CDbConnection'
 		),

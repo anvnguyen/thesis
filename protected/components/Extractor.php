@@ -46,8 +46,6 @@ class Extractor
 			// foreach ($items as $item) {				
 			// 	$item->save(false);
 			// }
-
-			}
 		}	
 
 		
