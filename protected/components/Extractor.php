@@ -15,7 +15,7 @@ class Extractor
 		$xpath = Xpath::model()->findByAttributes(array('WebsiteID' => $siteID));
 		$site = Website::model()->findByPk($xpath->WebsiteID);
 		$site->saveAttributes(array('LastCrawl'));
-		$categoryURL = Categoryurl::model()->findAllBySql("SELECT * FROM categoryURL WHERE WebsiteID = '$siteID'");
+		$categoryURL = Categoryurl::model()->findAllBySql("SELECT * FROM categoryurl WHERE WebsiteID = '$siteID'");
 		$log = new Log;
 		$log->Message = "Start crawling website " . $site->Name;
 		$log->Code = $site->ID;
