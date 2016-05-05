@@ -134,7 +134,7 @@ unset($form);
                 url: url,
             }).done(function( msg ) {
                 if(msg == "success")
-                    window.location.assign(<?php echo '"' . Yii::app()->createUrl('categoryUrl/admin') . '"';?>)
+                    window.location.assign(<?php echo '"' . Yii::app()->createUrl('categoryurl/admin') . '"';?>)
             });
                         
         }        
