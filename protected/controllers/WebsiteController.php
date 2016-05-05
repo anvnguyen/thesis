@@ -69,7 +69,7 @@ class WebsiteController extends Controller
 	{
 		$model=new Website;
 		$xpath = new Xpath;
-		$categoryURL = new CategoryURL;
+		$categoryURL = new Categoryurl;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
