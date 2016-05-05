@@ -42,6 +42,10 @@ return array(
 
 	// application components
 	'components'=>array(
+		'urlManager'=>array(
+            'urlFormat'=>'path',
+            'caseSensitive'=>false,
+        ),
 		'authManager'=>array(
 		    'class'=>'CDbAuthManager',
 		    'connectionID'=>'db',
